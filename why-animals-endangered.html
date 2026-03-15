@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Do Animals Need Our Help? 🌍</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@600;700;800&display=swap');
+
+:root { --nav-h: 64px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; width:100vw; height:100vh; overflow:hidden; }
+
+.slide { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.7s ease; z-index:1; padding-bottom:calc(var(--nav-h) + 10px); }
+.slide.active { opacity:1; pointer-events:all; }
+
+.bg-0 { background: linear-gradient(160deg, #1B5E20 0%, #2E7D32 40%, #388E3C 70%, #1a3a1a 100%); }
+.bg-1 { background: linear-gradient(160deg, #E8F5E9 0%, #A5D6A7 50%, #66BB6A 100%); }
+.bg-2 { background: linear-gradient(160deg, #FFF8E1 0%, #FFCC80 50%, #FFA726 100%); }
+.bg-3 { background: linear-gradient(160deg, #E3F2FD 0%, #90CAF9 50%, #42A5F5 100%); }
+.bg-4 { background: linear-gradient(160deg, #FCE4EC 0%, #F48FB1 50%, #EC407A 100%); }
+.bg-5 { background: linear-gradient(160deg, #F3E5F5 0%, #CE93D8 50%, #AB47BC 100%); }
+.bg-6 { background: linear-gradient(160deg, #E8F5E9 0%, #C8E6C9 40%, #A5D6A7 100%); }
+.bg-7 { background: linear-gradient(160deg, #FFFDE7 0%, #FFF9C4 50%, #F9A825 100%); }
+
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes sway { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+@keyframes rise { from{transform:translateY(28px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes bounce-in { 0%{transform:scale(0.5);opacity:0} 70%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+@keyframes pulse-gentle { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+@keyframes drift { 0%,100%{transform:translateX(0) rotate(-1deg)} 50%{transform:translateX(15px) rotate(1deg)} }
+@keyframes heartbeat { 0%,100%{transform:scale(1)} 15%{transform:scale(1.25)} 30%{transform:scale(1)} 45%{transform:scale(1.15)} 60%{transform:scale(1)} }
+
+.big-emoji { font-size:clamp(2.8rem,8vw,4.5rem); display:block; text-align:center; margin-bottom:8px; animation:float 3s ease-in-out infinite; }
+.deco { position:absolute; pointer-events:none; user-select:none; }
+
+.card { background:rgba(255,255,255,0.93); border-radius:26px; padding:16px 22px; max-width:min(640px,93vw); box-shadow:0 8px 36px rgba(0,0,0,0.13); position:relative; z-index:5; animation:rise 0.7s cubic-bezier(.22,1,.36,1) forwards; }
+.slide-title { font-family:'Baloo 2',cursive; font-size:clamp(1.35rem,4.2vw,2rem); font-weight:800; line-height:1.2; margin-bottom:9px; }
+.slide-text { font-size:clamp(0.9rem,2.5vw,1.08rem); line-height:1.58; color:#333; font-weight:700; }
+
+.hl  { background:rgba(255,160,0,0.2); border-radius:4px; padding:0 4px; color:#E65100; font-weight:800; }
+.hlg { background:rgba(46,125,50,0.15); border-radius:4px; padding:0 4px; color:#2E7D32; font-weight:800; }
+.hlb { background:rgba(21,101,192,0.15); border-radius:4px; padding:0 4px; color:#1565C0; font-weight:800; }
+.hlp { background:rgba(173,20,87,0.12); border-radius:4px; padding:0 4px; color:#AD1457; font-weight:800; }
+.hlr { background:rgba(198,40,40,0.12); border-radius:4px; padding:0 4px; color:#C62828; font-weight:800; }
+
+.reason-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+.reason-box { background:rgba(255,255,255,0.7); border-radius:14px; padding:9px 12px; border:2px solid rgba(0,0,0,0.07); text-align:center; }
+.reason-emoji { font-size:clamp(1.5rem,4vw,2rem); display:block; margin-bottom:3px; animation:float var(--rf,3s) ease-in-out infinite; animation-delay:var(--rd,0s); }
+.reason-label { font-size:clamp(0.7rem,1.9vw,0.82rem); font-weight:800; color:#444; }
+.reason-desc { font-size:clamp(0.62rem,1.6vw,0.72rem); color:#666; font-weight:700; margin-top:2px; }
+
+.animal-row { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; margin:10px 0; }
+.animal-box { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.animal-emoji { font-size:clamp(1.8rem,5vw,2.5rem); animation:float var(--af,3s) ease-in-out infinite; animation-delay:var(--ad,0s); }
+.animal-label { font-size:clamp(0.62rem,1.7vw,0.75rem); font-weight:800; color:#555; text-align:center; }
+
+.heart-row { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.fact-pill { background:rgba(46,125,50,0.1); border:1px solid rgba(46,125,50,0.3); border-radius:20px; padding:5px 14px; font-size:clamp(0.7rem,1.9vw,0.83rem); color:#2E7D32; font-weight:800; }
+
+/* NAV */
+#nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); display:flex; align-items:center; justify-content:center; gap:14px; background:rgba(0,30,0,0.8); backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.15); z-index:100; }
+.nav-btn { font-family:'Baloo 2',cursive; font-size:1rem; font-weight:700; padding:8px 24px; border:none; border-radius:50px; cursor:pointer; transition:transform 0.2s; }
+.nav-btn:hover { transform:scale(1.07); }
+#btn-prev { background:rgba(255,255,255,0.12); color:white; border:1px solid rgba(255,255,255,0.25); }
+#btn-next { background:linear-gradient(135deg,#2E7D32,#66BB6A); color:white; }
+.dot-row { display:flex; gap:7px; align-items:center; }
+.dot { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.25); cursor:pointer; transition:all 0.3s; }
+.dot.on { background:#FFD700; transform:scale(1.4); box-shadow:0 0 6px #FFD700; }
+
+#speak-fixed { position:fixed; bottom:80px; left:16px; z-index:150; display:inline-flex; align-items:center; gap:7px; padding:10px 18px; border:none; border-radius:50px; font-family:'Baloo 2',cursive; font-size:1rem; font-weight:700; cursor:pointer; background:linear-gradient(135deg,#2E7D32,#66BB6A); color:white; box-shadow:0 4px 20px rgba(46,125,50,0.5); transition:transform 0.2s; }
+#speak-fixed:hover { transform:scale(1.08); }
+#progress { position:fixed; top:0; left:0; height:5px; background:linear-gradient(90deg,#2E7D32,#66BB6A,#FFD700); transition:width 0.5s ease; z-index:200; border-radius:0 2px 2px 0; }
+#audio-banner { position:fixed; top:10px; left:50%; transform:translateX(-50%); background:rgba(46,125,50,0.92); color:white; font-family:'Baloo 2',cursive; font-size:0.9rem; font-weight:700; padding:7px 20px; border-radius:40px; z-index:300; pointer-events:none; transition:opacity 0.5s; white-space:nowrap; }
+</style>
+</head>
+<body>
+<div id="audio-banner">👆 Tap anywhere to enable audio!</div>
+<div id="progress"></div>
+<div id="app">
+
+<!-- SLIDE 0: TITLE -->
+<div class="slide bg-0 active">
+  <div class="deco" style="top:8%;left:8%;font-size:2.5rem;animation:sway 4s ease-in-out infinite">🌿</div>
+  <div class="deco" style="top:12%;right:10%;font-size:2rem;animation:sway 5s ease-in-out infinite;animation-delay:1s">🍃</div>
+  <div class="deco" style="bottom:20%;left:6%;font-size:2rem;animation:float 4s ease-in-out infinite;animation-delay:0.5s">🌺</div>
+  <div class="deco" style="bottom:22%;right:8%;font-size:1.8rem;animation:float 3.5s ease-in-out infinite;animation-delay:1.5s">🦋</div>
+  <span class="big-emoji" style="font-size:clamp(3.5rem,10vw,5.5rem)">🌍</span>
+  <div class="card" style="text-align:center;background:rgba(10,40,10,0.88);border:2px solid rgba(100,200,100,0.3)">
+    <div class="slide-title" style="color:#A5D6A7;font-size:clamp(1.6rem,5vw,2.4rem)">Why Do Animals Need Our Help? 🌍</div>
+    <div class="slide-text" style="color:#E8F5E9;margin-top:6px;font-size:clamp(0.95rem,2.7vw,1.12rem)">
+      Our planet is home to <span style="color:#FFD700;font-weight:800">millions of amazing animals!</span> 🐘🦁🐋🦜<br>
+      But some of them are in trouble — and they need us to help! 💚
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 1: WHAT IS ENDANGERED -->
+<div class="slide bg-1">
+  <div class="deco" style="top:8%;right:8%;font-size:2.5rem;animation:float 4s ease-in-out infinite">🦁</div>
+  <div class="deco" style="top:10%;left:6%;font-size:2rem;animation:float 3.5s ease-in-out infinite;animation-delay:1s">🐘</div>
+  <span class="big-emoji">⚠️</span>
+  <div class="card">
+    <div class="slide-title" style="color:#2E7D32">What Does "Endangered" Mean? ⚠️</div>
+    <div class="slide-text">
+      When we say an animal is <span class="hlr">endangered</span>, it means there are <span class="hl">only a very small number of them left</span> in the whole world.<br><br>
+      If we don't help them, one day there might be <span class="hlr">none left at all</span> — and that would be called <span class="hlr">extinction</span>. Gone forever. 😢<br><br>
+      But here is the good news — <span class="hlg">people all around the world are working SO hard to save them!</span> 💪🌍
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: REASON 1 - HABITAT LOSS -->
+<div class="slide bg-2">
+  <div class="deco" style="top:7%;left:5%;font-size:2.5rem;animation:sway 5s ease-in-out infinite">🌳</div>
+  <div class="deco" style="top:8%;right:7%;font-size:2rem;animation:sway 4s ease-in-out infinite;animation-delay:1s">🌲</div>
+  <span class="big-emoji">🏠</span>
+  <div class="card">
+    <div class="slide-title" style="color:#E65100">Reason 1: Losing Their Home 🏠</div>
+    <div class="slide-text">
+      Every animal has a <span class="hl">home in nature</span> — a forest, a river, an ocean, a grassland.<br><br>
+      Sometimes people cut down forests to build houses and farms. Sometimes rivers get dirty. Sometimes grasslands disappear.<br><br>
+      When an animal's home is <span class="hlr">destroyed</span>, they have nowhere to live, nowhere to find food, and nowhere to have babies. 🌳💔<br><br>
+      <span class="hlg">Protecting nature means protecting their homes!</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: REASON 2 - HUNTING -->
+<div class="slide bg-3">
+  <span class="big-emoji">🛡️</span>
+  <div class="card">
+    <div class="slide-title" style="color:#1565C0">Reason 2: Hunting 🛡️</div>
+    <div class="slide-text">
+      Some animals have been <span class="hlr">hunted</span> by humans for a very long time — for their fur, their tusks, their horns, or their skin.<br><br>
+      When too many animals are hunted, <span class="hl">there are not enough left</span> to have babies and keep the family going.<br><br>
+      That is why today there are <span class="hlb">laws in most countries</span> that make it illegal to hunt endangered animals. 🚫<br><br>
+      <span class="hlg">Rangers and wildlife protectors work every day</span> to keep animals safe! 💪
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: REASON 3 - CLIMATE -->
+<div class="slide bg-4">
+  <span class="big-emoji">🌡️</span>
+  <div class="card">
+    <div class="slide-title" style="color:#880E4F">Reason 3: Our Changing Planet 🌡️</div>
+    <div class="slide-text">
+      Our planet is getting a little warmer because of pollution in the air. This is called <span class="hlp">climate change</span>.<br><br>
+      When temperatures change, <span class="hl">animals that need cold weather</span> — like polar bears and penguins — find their icy homes melting away. 🐧🐻‍❄️<br><br>
+      Ocean animals are affected too when the water gets too warm. 🌊<br><br>
+      <span class="hlg">Every time we save energy or plant a tree, we are helping!</span> 🌱✨
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: SOME ENDANGERED ANIMALS -->
+<div class="slide bg-5">
+  <div class="card">
+    <div class="slide-title" style="color:#6A1B9A">Animals That Need Our Help 🙏</div>
+    <div class="slide-text" style="margin-bottom:8px">
+      There are thousands of endangered animals around the world. Here are some:
+    </div>
+    <div class="animal-row">
+      <div class="animal-box"><div class="animal-emoji" style="--af:3s;--ad:0s">🐼</div><div class="animal-label">Giant Panda<br><span style="color:#C62828">Vulnerable</span></div></div>
+      <div class="animal-box"><div class="animal-emoji" style="--af:3.5s;--ad:0.3s">🐯</div><div class="animal-label">Tiger<br><span style="color:#C62828">Endangered</span></div></div>
+      <div class="animal-box"><div class="animal-emoji" style="--af:4s;--ad:0.6s">🦏</div><div class="animal-label">White Rhino<br><span style="color:#C62828">Critical!</span></div></div>
+      <div class="animal-box"><div class="animal-emoji" style="--af:3.2s;--ad:0.9s">🐋</div><div class="animal-label">Blue Whale<br><span style="color:#C62828">Endangered</span></div></div>
+      <div class="animal-box"><div class="animal-emoji" style="--af:3.8s;--ad:1.2s">🦜</div><div class="animal-label">Macaw<br><span style="color:#C62828">Endangered</span></div></div>
+    </div>
+    <div class="slide-text" style="margin-top:8px">
+      <span class="hlg">The good news? Many animals have been SAVED</span> because people cared enough to help! 🎉
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: HOPE AND RESCUE -->
+<div class="slide bg-6">
+  <div class="deco" style="top:8%;left:6%;font-size:2.2rem;animation:float 4s ease-in-out infinite">🌱</div>
+  <div class="deco" style="top:10%;right:7%;font-size:2rem;animation:float 3.5s ease-in-out infinite;animation-delay:1s">🌿</div>
+  <span class="big-emoji" style="animation:heartbeat 2s ease-in-out infinite">💚</span>
+  <div class="card">
+    <div class="slide-title" style="color:#2E7D32">Reasons to Have Hope! 🌟</div>
+    <div class="slide-text">
+      <span class="hlg">The Bald Eagle</span> was almost gone — but people protected it and now thousands soar the skies! 🦅<br><br>
+      <span class="hlg">Humpback Whales</span> were nearly extinct — now their numbers are growing! 🐋<br><br>
+      <span class="hlg">Giant Pandas</span> were critically endangered — now they are recovering! 🐼<br><br>
+      <span class="hl">When humans decide to help — it WORKS!</span> 💪🌍
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: WHAT YOU CAN DO -->
+<div class="slide bg-7">
+  <div class="deco" style="top:8%;left:5%;font-size:2rem;animation:float 4s ease-in-out infinite">🌸</div>
+  <div class="deco" style="top:10%;right:7%;font-size:2rem;animation:drift 5s ease-in-out infinite">🦋</div>
+  <span class="big-emoji" style="font-size:clamp(2.5rem,7vw,4rem)">⭐</span>
+  <div class="card" style="text-align:center">
+    <div class="slide-title" style="color:#E65100;font-size:clamp(1.4rem,4.5vw,2rem)">YOU Can Be a Hero! ⭐</div>
+    <div class="slide-text" style="text-align:left">
+      Even a child can help animals! Here is how:<br><br>
+      <span class="hlg">🌱 Plant flowers</span> — they feed bees and butterflies!<br>
+      <span class="hlb">💧 Save water</span> — animals need clean water too!<br>
+      <span class="hl">📚 Learn about animals</span> — knowing is the first step!<br>
+      <span class="hlp">💬 Tell others</span> — share what you know!
+    </div>
+    <div class="heart-row">
+      <span class="fact-pill">🌍 Every animal matters</span>
+      <span class="fact-pill">💚 You can make a difference</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<button id="speak-fixed" onclick="speakCurrent()">🔊 Read to me!</button>
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="changeSlide(-1)">← Back</button>
+  <div class="dot-row" id="dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+const TOTAL = 8;
+let current = 0;
+
+const TEXTS = [
+  "Why Do Animals Need Our Help? Our planet is home to millions of amazing animals! Elephants, lions, whales, parrots — and so many more! But some of them are in trouble — and they need us to help!",
+  "What does endangered mean? When we say an animal is endangered, it means there are only a very small number of them left in the whole world. If we don't help them, one day there might be none left at all — and that would be called extinction. Gone forever. But here is the good news — people all around the world are working so hard to save them!",
+  "Reason one — losing their home. Every animal has a home in nature — a forest, a river, an ocean, a grassland. Sometimes people cut down forests to build houses and farms. Sometimes rivers get dirty. Sometimes grasslands disappear. When an animal's home is destroyed, they have nowhere to live, nowhere to find food, and nowhere to have babies. Protecting nature means protecting their homes!",
+  "Reason two — hunting. Some animals have been hunted by humans for a very long time — for their fur, their tusks, their horns, or their skin. When too many animals are hunted, there are not enough left to have babies and keep the family going. That is why today there are laws in most countries that make it illegal to hunt endangered animals. Rangers and wildlife protectors work every day to keep animals safe!",
+  "Reason three — our changing planet. Our planet is getting a little warmer because of pollution in the air. This is called climate change. When temperatures change, animals that need cold weather — like polar bears and penguins — find their icy homes melting away. Ocean animals are affected too when the water gets too warm. Every time we save energy or plant a tree, we are helping!",
+  "Animals that need our help. There are thousands of endangered animals around the world. The Giant Panda is vulnerable. Tigers are endangered. The White Rhino is critically endangered. Blue Whales are endangered. Many Macaws are endangered. The good news? Many animals have been saved because people cared enough to help!",
+  "Reasons to have hope! The Bald Eagle was almost gone — but people protected it and now thousands soar the skies! Humpback Whales were nearly extinct — now their numbers are growing! Giant Pandas were critically endangered — now they are recovering! When humans decide to help — it works!",
+  "You can be a hero! Even a child can help animals! Plant flowers — they feed bees and butterflies! Save water — animals need clean water too! Learn about animals — knowing is the first step! Tell others — share what you know! Every animal matters, and you can make a difference!"
+];
+
+function buildDots(){
+  const c=document.getElementById('dots');
+  for(let i=0;i<TOTAL;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' on':'');
+    d.onclick=()=>goTo(i); c.appendChild(d);
+  }
+}
+function updateProgress(){
+  document.getElementById('progress').style.width=((current+1)/TOTAL*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===current));
+  document.getElementById('btn-prev').style.opacity=current===0?'0.3':'1';
+  document.getElementById('btn-next').style.opacity=current===TOTAL-1?'0.3':'1';
+}
+function goTo(n){
+  window.speechSynthesis&&window.speechSynthesis.cancel();
+  document.querySelector('.slide.active')&&document.querySelector('.slide.active').classList.remove('active');
+  current=Math.max(0,Math.min(TOTAL-1,n));
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  updateProgress();
+}
+function changeSlide(dir){goTo(current+dir);}
+function speakCurrent(){speak(current);}
+
+let audioUnlocked=false;
+function unlockAudio(){
+  if(audioUnlocked)return; audioUnlocked=true;
+  if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(' ');u.volume=0;window.speechSynthesis.speak(u);}
+}
+function hideBanner(){
+  const b=document.getElementById('audio-banner');
+  if(b){b.style.opacity='0';setTimeout(function(){b.remove();},600);}
+}
+document.addEventListener('click',unlockAudio,{once:true});
+document.addEventListener('touchstart',unlockAudio,{once:true});
+document.addEventListener('click',hideBanner,{once:true});
+document.addEventListener('touchstart',hideBanner,{once:true});
+
+function speak(idx){
+  if(!window.speechSynthesis){alert("Try Chrome for audio!");return;}
+  window.speechSynthesis.cancel();
+  setTimeout(function(){
+    const sentences=TEXTS[idx].match(/[^.!?]+[.!?]+/g)||[TEXTS[idx]];
+    let voices=speechSynthesis.getVoices();
+    function findVoice(v){
+      return v.find(x=>x.name==='Samantha')||v.find(x=>x.name==='Karen')||v.find(x=>x.name==='Moira')||
+             v.find(x=>x.name==='Google UK English Female')||v.find(x=>x.lang==='en-US'&&x.localService)||v.find(x=>x.lang.startsWith('en'));
+    }
+    let preferred=findVoice(voices);
+    if(!preferred){speechSynthesis.onvoiceschanged=function(){preferred=findVoice(speechSynthesis.getVoices());runSpeech(sentences,preferred);};}
+    else{runSpeech(sentences,preferred);}
+  },120);
+}
+function runSpeech(sentences,preferred){
+  let i=0;
+  function next(){
+    if(i>=sentences.length)return;
+    const text=sentences[i].trim();if(!text){i++;next();return;}
+    const u=new SpeechSynthesisUtterance(text);
+    if(preferred)u.voice=preferred;
+    u.rate=0.80;u.pitch=1.10;u.volume=1;
+    if(text.includes('!')){{u.pitch=1.20;u.rate=0.86;}}
+    if(text.includes('?')){{u.pitch=1.15;u.rate=0.78;}}
+    i++;u.onend=next;u.onerror=function(){i++;next();};
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')changeSlide(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')changeSlide(-1);
+});
+let touchX=null;
+document.addEventListener('touchstart',function(e){touchX=e.touches[0].clientX;});
+document.addEventListener('touchend',function(e){
+  if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX;
+  if(Math.abs(dx)>50)changeSlide(dx<0?1:-1);touchX=null;
+});
+if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices();};}
+buildDots();updateProgress();
+</script>
+</body>
+</html>

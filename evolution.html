@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Did We Get Here? 🌍</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+</style>
+<style>
+  :root {
+    --sky: #87CEEB;
+    --deep-ocean: #0a3d62;
+    --ocean: #1e6fa8;
+    --shallow: #4fc3f7;
+    --land: #8BC34A;
+    --dark-land: #558B2F;
+    --sand: #F9E4B7;
+    --bark: #795548;
+    --leaf: #66BB6A;
+    --sun: #FFD600;
+    --warm: #FF7043;
+    --purple: #7E57C2;
+    --pink: #EC407A;
+    --text-dark: #1a1a2e;
+    --cream: #FFFDE7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* SLIDE BASE */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* SLIDE BACKGROUNDS */
+  .slide-0 { background: radial-gradient(ellipse at 50% 30%, #0d2137 0%, #05070d 100%); }
+  .slide-1 { background: linear-gradient(180deg, #0a1628 0%, #0d3a6e 50%, #1565C0 100%); }
+  .slide-2 { background: linear-gradient(180deg, #1565C0 0%, #1976D2 40%, #388E3C 80%, #2E7D32 100%); }
+  .slide-3 { background: linear-gradient(180deg, #1B5E20 0%, #388E3C 30%, #795548 60%, #5D4037 100%); }
+  .slide-4 { background: linear-gradient(180deg, #4CAF50 0%, #66BB6A 40%, #F9E4B7 70%, #795548 100%); }
+  .slide-5 { background: linear-gradient(180deg, #87CEEB 0%, #64B5F6 30%, #81C784 60%, #4CAF50 100%); }
+  .slide-6 { background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 40%, #A5D6A7 70%, #66BB6A 100%); }
+  .slide-7 { background: radial-gradient(ellipse at 50% 50%, #fff9c4 0%, #FFD600 40%, #FF8F00 100%); }
+
+  /* SCENE CONTAINER */
+  .scene {
+    width: min(700px, 96vw);
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px 78px 20px;
+  }
+
+  /* TEXT BOX */
+  .story-box {
+    background: rgba(255,255,255,0.95);
+    border-radius: 22px;
+    padding: 14px 20px;
+    max-width: min(640px, 92vw);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 4px rgba(255,255,255,0.2);
+    position: relative;
+    z-index: 10;
+    margin: 8px auto 0;
+  }
+
+  .story-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    line-height: 1.15;
+    margin-bottom: 7px;
+    color: var(--text-dark);
+  }
+
+  .story-text {
+    font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+    line-height: 1.5;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .emoji-big {
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin-bottom: 4px;
+    display: block;
+    text-align: center;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* ANIMATIONS */
+  @keyframes drift {
+    0%,100% { transform: translateX(0) rotate(-2deg); }
+    50% { transform: translateX(20px) rotate(2deg); }
+  }
+  @keyframes wiggle {
+    0%,100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+  @keyframes pulse-glow {
+    0%,100% { filter: drop-shadow(0 0 8px #FFD60088); }
+    50% { filter: drop-shadow(0 0 24px #FFD600cc); }
+  }
+  @keyframes swim {
+    0%,100% { transform: translateX(0) scaleX(1); }
+    45% { transform: translateX(60px) scaleX(1); }
+    50% { transform: translateX(60px) scaleX(-1); }
+    95% { transform: translateX(0) scaleX(-1); }
+  }
+  @keyframes stars-twinkle {
+    0%,100% { opacity:0.6; }
+    50% { opacity:1; transform: scale(1.4); }
+  }
+  @keyframes rise {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .slide.active .story-box {
+    animation: rise 0.7s cubic-bezier(.22,1,.36,1) forwards;
+  }
+
+  /* DECORATIVE ELEMENTS */
+  .deco {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    font-size: 3rem;
+  }
+
+  /* NAVIGATION */
+  #nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: rgba(0,0,0,0.6);
+    padding: 12px 22px;
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .nav-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .nav-btn:hover { transform: scale(1.07); }
+  .nav-btn:active { transform: scale(0.97); }
+
+  #btn-prev { background: rgba(255,255,255,0.15); color: white; }
+  #btn-next { background: linear-gradient(135deg, #FFD600, #FF8F00); color: #1a1a2e; }
+
+  .dot-container { display: flex; gap: 8px; align-items: center; }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.on { background: #FFD600; transform: scale(1.3); }
+
+  /* SPEAK BUTTON — fixed so it's always visible above nav */
+  .speak-btn {
+    display: none; /* hidden from inside story-box; shown via #speak-fixed */
+  }  #speak-fixed {
+    position: fixed;
+    bottom: 68px;
+    right: 18px;
+    z-index: 150;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, #7E57C2, #EC407A);
+    color: white;
+    box-shadow: 0 4px 18px rgba(126,87,194,0.55);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #speak-fixed:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(126,87,194,0.7); }
+  #speak-fixed:active { transform: scale(0.96); }
+
+  /* FAMILY TREE SLIDE */
+  .slide-8 { background: linear-gradient(160deg, #e8f5e9 0%, #c8e6c9 40%, #a5d6a7 100%); }
+  .slide-8 .story-title { color: #1B5E20; }
+
+  .tree-wrap {
+    width: min(680px, 95vw);
+    margin: 0 auto;
+    padding: 0 12px 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .tree-title-box {
+    background: rgba(255,255,255,0.92);
+    border-radius: 22px 22px 0 0;
+    padding: 16px 24px 10px;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+  .tree-canvas-box {
+    background: rgba(255,255,255,0.88);
+    border-radius: 0 0 22px 22px;
+    padding: 10px 16px 16px;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  }
+  .ancestor-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: clamp(8px, 3vw, 28px);
+    margin-bottom: 0;
+  }
+  .ancestor-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+  }
+  .ancestor-emoji {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.18));
+    animation: float var(--fdur, 3s) ease-in-out infinite;
+    animation-delay: var(--fdelay, 0s);
+  }
+  .ancestor-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.6rem, 2vw, 0.82rem);
+    color: #2e7d32;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 80px;
+  }
+  .ancestor-date {
+    font-size: clamp(0.5rem, 1.5vw, 0.68rem);
+    color: #888;
+    font-weight: 700;
+    text-align: center;
+  }
+  .branch-connector {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    height: clamp(28px, 5vw, 44px);
+  }
+  .branch-line-v {
+    width: 3px;
+    background: #a5d6a7;
+    border-radius: 2px;
+    height: 100%;
+  }
+  .branch-line-h {
+    position: absolute;
+    top: 0;
+    height: 3px;
+    background: #a5d6a7;
+    border-radius: 2px;
+  }
+  .branch-split {
+    width: 100%;
+    height: clamp(36px, 6vw, 56px);
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  .split-desc {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.6rem, 1.8vw, 0.78rem);
+    color: #555;
+    font-weight: 700;
+    background: #f1f8e9;
+    border: 2px solid #a5d6a7;
+    border-radius: 20px;
+    padding: 3px 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+  }
+  .you-node {
+    background: linear-gradient(135deg, #FFD600, #FF8F00);
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 3.5vw, 1.4rem);
+    color: #1a1a2e;
+    box-shadow: 0 4px 16px rgba(255,143,0,0.45);
+    margin-top: 4px;
+    animation: pulse-glow2 2s ease-in-out infinite;
+  }
+  @keyframes pulse-glow2 {
+    0%,100% { box-shadow: 0 4px 16px rgba(255,143,0,0.45); }
+    50% { box-shadow: 0 6px 28px rgba(255,143,0,0.75); }
+  }
+  .tree-note {
+    font-size: clamp(0.72rem, 2vw, 0.88rem);
+    color: #555;
+    text-align: center;
+    margin-top: 8px;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  /* SLIDE-SPECIFIC DECORATIONS */
+  .star {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: white;
+    border-radius: 50%;
+    animation: stars-twinkle var(--dur, 2s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.25;
+    animation: drift var(--dur,4s) ease-in-out infinite;
+  }
+
+  .fish-emoji {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: swim 8s linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+
+  /* COLOR ACCENTS PER SLIDE */
+  .slide-0 .story-title { color: #FFD600; }
+  .slide-1 .story-title { color: #1565C0; }
+  .slide-2 .story-title { color: #1B5E20; }
+  .slide-3 .story-title { color: #3E2723; }
+  .slide-4 .story-title { color: #1B5E20; }
+  .slide-5 .story-title { color: #0D47A1; }
+  .slide-6 .story-title { color: #4A148C; }
+  .slide-7 .story-title { color: #E65100; }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #FFD600, #FF8F00);
+    border-radius: 0 3px 3px 0;
+    transition: width 0.5s ease;
+    z-index: 200;
+  }
+
+  .slide-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* EVOLUTION CHAIN VISUAL */
+  .evo-chain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+  .evo-arrow {
+    font-size: 1.4rem;
+    color: #999;
+    font-weight: 900;
+  }
+
+  /* HIGHLIGHT */
+  .hl { 
+    display: inline;
+    background: linear-gradient(120deg, #FFD60055 0%, #FF8F0055 100%);
+    border-radius: 4px;
+    padding: 0 3px;
+    font-weight: 800;
+  }
+  .hl-blue { background: linear-gradient(120deg, #42A5F555 0%, #1565C055 100%); }
+  .hl-green { background: linear-gradient(120deg, #66BB6A55 0%, #1B5E2055 100%); }
+  .hl-purple { background: linear-gradient(120deg, #CE93D855 0%, #7B1FA255 100%); }
+</style>
+</head>
+<body>
+<div id="audio-banner" style="position:fixed;top:8px;left:50%;transform:translateX(-50%);background:rgba(126,87,194,0.92);color:white;font-family:'Fredoka One',cursive;font-size:0.9rem;padding:7px 18px;border-radius:40px;z-index:300;pointer-events:none;transition:opacity 0.5s;white-space:nowrap">
+  👆 Tap anywhere to enable audio!
+</div>
+<div id="progress"></div>
+<div id="app">
+
+  <!-- SLIDE 0: TITLE -->
+  <div class="slide slide-0 active">
+    <!-- Stars -->
+    <div class="star" style="top:10%;left:8%;--dur:1.8s;--delay:0s;width:6px;height:6px"></div>
+    <div class="star" style="top:20%;left:20%;--dur:2.5s;--delay:0.3s"></div>
+    <div class="star" style="top:8%;left:55%;--dur:1.5s;--delay:0.7s;width:5px;height:5px"></div>
+    <div class="star" style="top:30%;left:80%;--dur:3s;--delay:0.5s"></div>
+    <div class="star" style="top:15%;left:90%;--dur:2s;--delay:1s;width:3px;height:3px"></div>
+    <div class="star" style="top:40%;left:5%;--dur:2.2s;--delay:0.2s"></div>
+    <div class="star" style="top:50%;left:70%;--dur:1.9s;--delay:0.9s;width:5px;height:5px"></div>
+    <div class="star" style="top:60%;left:40%;--dur:2.8s;--delay:0.4s"></div>
+    <div class="star" style="top:70%;left:85%;--dur:1.6s;--delay:1.1s"></div>
+    <div class="star" style="top:80%;left:15%;--dur:2.1s;--delay:0.6s;width:4px;height:4px"></div>
+
+    <div class="scene" style="justify-content:center;gap:10px">
+      <span class="emoji-big" style="font-size:5rem;animation-duration:4s">🌍</span>
+      <div class="story-box" style="text-align:center">
+        <div class="story-title" style="font-size:clamp(2rem,6vw,3rem);color:#FFD600">
+          How Did We Get Here?
+        </div>
+        <div class="story-text" style="margin-top:8px">
+          The amazing true story of <span class="hl">how ALL life on Earth</span> — including us — came to be! 🚀
+        </div>
+        <div class="evo-chain" style="margin-top:14px">
+          <span>🦠</span><span class="evo-arrow">→</span>
+          <span>🐟</span><span class="evo-arrow">→</span>
+          <span>🦎</span><span class="evo-arrow">→</span>
+          <span>🐒</span><span class="evo-arrow">→</span>
+          <span>🧑</span>
+        </div>
+        <button class="speak-btn" onclick="speak(0)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: THE BEGINNING -->
+  <div class="slide slide-1">
+    <div class="bubble" style="width:80px;height:80px;background:#4fc3f7;top:15%;left:10%;--dur:5s"></div>
+    <div class="bubble" style="width:50px;height:50px;background:#1565C0;top:60%;right:8%;--dur:7s"></div>
+    <div class="bubble" style="width:120px;height:120px;background:#0288d1;bottom:20%;left:20%;--dur:6s"></div>
+
+    <div class="deco" style="top:15%;right:12%;font-size:4rem;animation:float 5s ease-in-out infinite">💧</div>
+    <div class="deco" style="top:25%;left:8%;font-size:3rem;animation:drift 6s ease-in-out infinite">⚡</div>
+
+    <div class="scene">
+      <span class="emoji-big" style="font-size:4.5rem">🌊</span>
+      <div class="story-box">
+        <div class="story-title">It All Began in the Ocean! 🌊</div>
+        <div class="story-text">
+          A very, VERY long time ago — <span class="hl hl-blue">about 4 billion years ago</span> — Earth was covered mostly in water.<br>
+          Tiny, tiny living things called <span class="hl">microbes</span> appeared in the ocean. They were <em>so</em> small you'd need a microscope to see them! 🦠<br>
+          These little guys were the <span class="hl hl-green">very first life on Earth</span> — the great-great-great (times a million!) grandparents of every living thing today. 🎉
+        </div>
+        <button class="speak-btn" onclick="speak(1)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHAT IS EVOLUTION -->
+  <div class="slide slide-2">
+    <div class="fish-emoji" style="top:20%;--delay:0s">🐠</div>
+    <div class="fish-emoji" style="top:30%;--delay:3s;font-size:2rem">🐡</div>
+    <div class="fish-emoji" style="top:40%;--delay:1.5s;font-size:1.8rem">🦑</div>
+
+    <div class="scene">
+      <span class="emoji-big">🌱</span>
+      <div class="story-box">
+        <div class="story-title">What is Evolution? 🌱</div>
+        <div class="story-text">
+          Imagine your family. You look a little like your mom or dad, right? But not exactly the same!<br>
+          <span class="hl">Evolution</span> is how living things slowly change over <span class="hl hl-blue">millions and millions of years</span>. Each baby is just a tiny bit different from its parents.<br>
+          The ones who are best at <span class="hl hl-green">finding food, staying safe, and having babies</span> of their own survive. Little by little, after millions of babies, animals can look very different! 🐣
+        </div>
+        <button class="speak-btn" onclick="speak(2)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: FISH TO LAND -->
+  <div class="slide slide-3">
+    <div class="deco" style="bottom:30%;left:5%;font-size:4rem;animation:wiggle 2s ease-in-out infinite">🌿</div>
+    <div class="deco" style="bottom:25%;right:8%;font-size:3.5rem;animation:wiggle 2.5s ease-in-out infinite;animation-delay:0.5s">🌿</div>
+    <div class="deco" style="top:10%;left:15%;font-size:5rem;animation:drift 7s ease-in-out infinite">☀️</div>
+
+    <div class="scene">
+      <div class="evo-chain" style="font-size:clamp(2rem,7vw,3.5rem);margin-bottom:6px">
+        <span>🐟</span><span class="evo-arrow" style="font-size:2rem">→</span><span>🦎</span>
+      </div>
+      <div class="story-box">
+        <div class="story-title">Fish Crawled onto Land! 🦎</div>
+        <div class="story-text">
+          After millions of years, some fish started growing <span class="hl">little leg-like fins</span>. They could wiggle up onto land!<br>
+          These turned into <span class="hl hl-blue">reptiles and amphibians</span> — things like frogs, lizards, and dinosaurs!<br>
+          🦕 <span class="hl hl-green">Dinosaurs ruled the Earth</span> for 165 million years — way longer than humans have been around. Then, about 66 million years ago, a giant asteroid hit Earth... and most dinosaurs disappeared. But some survived and became... <strong>birds!</strong> 🐦
+        </div>
+        <button class="speak-btn" onclick="speak(3)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: MAMMALS -->
+  <div class="slide slide-4">
+    <div class="deco" style="top:8%;left:10%;font-size:4rem;animation:float 3s ease-in-out infinite">🌸</div>
+    <div class="deco" style="top:12%;right:12%;font-size:3rem;animation:float 4s ease-in-out infinite;animation-delay:1s">🦋</div>
+    <div class="deco" style="bottom:30%;right:5%;font-size:3.5rem;animation:wiggle 3s ease-in-out infinite">🌳</div>
+
+    <div class="scene">
+      <span class="emoji-big" style="font-size:4rem">🐭🐕🐘</span>
+      <div class="story-box">
+        <div class="story-title">Mammals Appear! 🐾</div>
+        <div class="story-text">
+          After the dinosaurs, <span class="hl">small furry mammals</span> got their chance to grow and spread everywhere!<br>
+          Mammals are animals that are warm and fuzzy, drink their mama's milk as babies, and are warm-blooded — like <span class="hl hl-blue">dogs, elephants, whales, and YOU! 🐋</span><br>
+          Over millions of years, mammals evolved into all sorts of creatures. Some went back to the sea and became whales. Some grew wings. And some... <span class="hl hl-green">climbed into the trees</span>. 🐒
+        </div>
+        <button class="speak-btn" onclick="speak(4)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: PRIMATES & ANCESTORS -->
+  <div class="slide slide-5">
+    <div class="deco" style="top:10%;left:8%;font-size:4rem;animation:float 3.5s ease-in-out infinite">🌴</div>
+    <div class="deco" style="top:8%;right:10%;font-size:3rem;animation:float 5s ease-in-out infinite;animation-delay:0.8s">🍌</div>
+    <div class="deco" style="bottom:28%;left:4%;font-size:3rem;animation:wiggle 2s ease-in-out infinite">🍃</div>
+
+    <div class="scene">
+      <div class="evo-chain" style="font-size:clamp(2rem,7vw,3.5rem);margin-bottom:6px">
+        <span>🐒</span><span class="evo-arrow" style="font-size:2rem">→</span><span>🦴</span><span class="evo-arrow" style="font-size:2rem">→</span><span>🧑</span>
+      </div>
+      <div class="story-box">
+        <div class="story-title">Our Ancient Relatives 🐒</div>
+        <div class="story-text">
+          Here's something amazing: <span class="hl">humans and chimpanzees share 98% of the same DNA!</span> That's like being almost-identical recipes with just a few ingredients changed.<br>
+          We didn't <em>come from</em> chimps though — it's more like we have the <span class="hl hl-blue">same great-great-grandparents</span>! About 6 million years ago, our family tree branched apart.<br>
+          Slowly, our ancestors <span class="hl hl-green">stood upright, grew bigger brains, learned to use tools, make fire, and tell stories.</span> 🔥
+        </div>
+        <button class="speak-btn" onclick="speak(5)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: HOW DO WE KNOW -->
+  <div class="slide slide-6">
+    <div class="deco" style="top:8%;left:10%;font-size:4rem;animation:float 4s ease-in-out infinite">🔬</div>
+    <div class="deco" style="top:12%;right:8%;font-size:3.5rem;animation:float 3s ease-in-out infinite;animation-delay:1.2s">📖</div>
+    <div class="deco" style="bottom:28%;right:6%;font-size:3rem;animation:wiggle 2.5s ease-in-out infinite">💎</div>
+
+    <div class="scene">
+      <span class="emoji-big">🦴🔍</span>
+      <div class="story-box">
+        <div class="story-title">How Do Scientists Know? 🔬</div>
+        <div class="story-text">
+          Great question! Scientists are like <span class="hl">nature's detectives</span>, and they have amazing clues:<br>
+          🦴 <span class="hl hl-blue">Fossils</span> — bones and shells turned to stone, millions of years old!<br>
+          🧬 <span class="hl hl-green">DNA</span> — the tiny instructions inside every cell that show who's related to who!<br>
+          🌍 <span class="hl hl-purple">Rock layers</span> — Earth keeps records like a history book in stone!<br>
+          Thousands of scientists all over the world have checked these clues for over 150 years. <span class="hl">Evolution is one of the best-proven ideas in all of science!</span> ✅
+        </div>
+        <button class="speak-btn" onclick="speak(6)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: YOU ARE AMAZING -->
+  <div class="slide slide-7">
+    <div class="deco" style="top:8%;left:5%;font-size:3.5rem;animation:pulse-glow 2s ease-in-out infinite">⭐</div>
+    <div class="deco" style="top:10%;right:8%;font-size:3.5rem;animation:pulse-glow 2.5s ease-in-out infinite;animation-delay:0.5s">✨</div>
+    <div class="deco" style="bottom:32%;left:3%;font-size:3rem;animation:float 3s ease-in-out infinite">💛</div>
+    <div class="deco" style="bottom:28%;right:5%;font-size:3rem;animation:float 4s ease-in-out infinite;animation-delay:0.8s">🌟</div>
+
+    <div class="scene">
+      <span class="emoji-big" style="font-size:5rem;animation-duration:2s">🧬</span>
+      <div class="story-box" style="text-align:center">
+        <div class="story-title" style="color:#E65100">YOU Are Amazing! 🌟</div>
+        <div class="story-text">
+          You are made of <span class="hl">billions of years of incredible changes</span>. Every creature that ever lived before you was brave, clever, and lucky enough to survive!<br>
+          <span class="hl hl-blue">Science helps us understand our amazing universe</span> — and knowing the truth makes the world even more wonderful, not less. 💙<br>
+          Keep asking questions. Keep being curious. <span class="hl hl-green">That's what scientists do — and maybe YOU will be one too!</span> 🚀🔭
+        </div>
+        <div class="evo-chain" style="margin-top:12px">
+          <span>🦠</span><span class="evo-arrow">→</span>
+          <span>🐟</span><span class="evo-arrow">→</span>
+          <span>🦎</span><span class="evo-arrow">→</span>
+          <span>🐒</span><span class="evo-arrow">→</span>
+          <span>🧑</span><span class="evo-arrow">→</span>
+          <span>⭐</span>
+        </div>
+        <button class="speak-btn" onclick="speak(7)">🔊 Read to me!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: FAMILY TREE VISUAL — compact, fits on one screen -->
+  <div class="slide slide-8" style="justify-content:center;align-items:center">
+    <div class="deco" style="top:5%;left:3%;font-size:2.2rem;animation:float 4s ease-in-out infinite;opacity:0.7">🌳</div>
+    <div class="deco" style="top:5%;right:4%;font-size:2rem;animation:float 5s ease-in-out infinite;animation-delay:1s;opacity:0.7">🍃</div>
+
+    <div style="width:min(660px,95vw);background:rgba(255,255,255,0.93);border-radius:24px;box-shadow:0 8px 32px rgba(0,0,0,0.15);padding:14px 18px 14px;margin-bottom:70px">
+
+      <!-- TITLE -->
+      <div style="text-align:center;margin-bottom:8px">
+        <div class="story-title" style="font-size:clamp(1.2rem,3.5vw,1.7rem);color:#1B5E20">Our Family Tree 🌳</div>
+        <div style="font-size:clamp(0.72rem,2vw,0.88rem);color:#555;font-weight:700">6 million years ago, we shared a great-great-grandparent with chimps!</div>
+      </div>
+
+      <!-- TREE LAYOUT using CSS grid for compact control -->
+      <div style="display:grid;grid-template-columns:1fr 3px 1fr;grid-template-rows:auto;gap:0;align-items:start">
+
+        <!-- TOP: common ancestor spans full width above the divider -->
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:4px">
+          <span style="font-size:clamp(1.8rem,5vw,2.4rem);animation:float 4s ease-in-out infinite;display:block">🦴</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:clamp(0.7rem,2vw,0.9rem);color:#2e7d32;text-align:center;line-height:1.2">Common Ancestor</div>
+          <div style="font-size:clamp(0.58rem,1.6vw,0.72rem);color:#888;font-weight:700">~8 million years ago</div>
+          <!-- stem down -->
+          <div style="width:3px;height:12px;background:#a5d6a7;border-radius:2px"></div>
+          <!-- horizontal bar with split label -->
+          <div style="position:relative;width:65%;height:3px;background:#a5d6a7;border-radius:2px;margin:0 auto">
+            <div style="position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#66BB6A;border-radius:50%"></div>
+            <div style="position:absolute;right:0;top:50%;transform:translate(50%,-50%);width:8px;height:8px;background:#66BB6A;border-radius:50%"></div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#f1f8e9;border:2px solid #a5d6a7;border-radius:20px;padding:2px 10px;font-size:clamp(0.55rem,1.5vw,0.72rem);font-family:'Nunito',sans-serif;font-weight:800;color:#555;white-space:nowrap">6 million years ago — the split! 🍂</div>
+          </div>
+          <!-- two stems down -->
+          <div style="display:flex;justify-content:space-around;width:65%;margin:0 auto">
+            <div style="width:3px;height:12px;background:#a5d6a7;border-radius:2px"></div>
+            <div style="width:3px;height:12px;background:#a5d6a7;border-radius:2px"></div>
+          </div>
+        </div>
+
+        <!-- LEFT: chimp branch -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 6px">
+          <!-- node 1 -->
+          <span style="font-size:clamp(1.6rem,4.5vw,2.2rem);animation:float 3.5s ease-in-out infinite;display:block">🐒</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:clamp(0.62rem,1.8vw,0.8rem);color:#2e7d32;text-align:center;line-height:1.2">Early Ape</div>
+          <div style="font-size:clamp(0.52rem,1.4vw,0.65rem);color:#999;font-weight:700">~6M yrs ago</div>
+          <div style="width:3px;height:14px;background:#a5d6a7;border-radius:2px"></div>
+          <!-- node 2 -->
+          <span style="font-size:clamp(1.6rem,4.5vw,2.2rem);animation:float 3s ease-in-out infinite;animation-delay:0.4s;display:block">🦍</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:clamp(0.62rem,1.8vw,0.8rem);color:#2e7d32;text-align:center;line-height:1.2">Gorilla &amp; Chimp</div>
+          <div style="font-size:clamp(0.52rem,1.4vw,0.65rem);color:#999;font-weight:700">today</div>
+          <div style="background:#e8f5e9;border:2px solid #a5d6a7;border-radius:10px;padding:3px 8px;margin-top:2px;font-size:clamp(0.58rem,1.6vw,0.72rem);color:#2e7d32;font-weight:800;text-align:center">98% same DNA as you! 🧬</div>
+        </div>
+
+        <!-- CENTER vertical divider -->
+        <div style="background:#e0e0e0;border-radius:2px;height:100%;min-height:160px;margin-top:0"></div>
+
+        <!-- RIGHT: human branch -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 6px">
+          <span style="font-size:clamp(1.6rem,4.5vw,2.2rem);animation:float 3.8s ease-in-out infinite;animation-delay:0.2s;display:block">🚶</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:clamp(0.62rem,1.8vw,0.8rem);color:#2e7d32;text-align:center;line-height:1.2">Walks Upright</div>
+          <div style="font-size:clamp(0.52rem,1.4vw,0.65rem);color:#999;font-weight:700">~4M yrs ago</div>
+          <div style="width:3px;height:10px;background:#a5d6a7;border-radius:2px"></div>
+          <span style="font-size:clamp(1.6rem,4.5vw,2.2rem);animation:float 3.2s ease-in-out infinite;animation-delay:0.6s;display:block">🔥</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:clamp(0.62rem,1.8vw,0.8rem);color:#2e7d32;text-align:center;line-height:1.2">Fire &amp; Tools</div>
+          <div style="font-size:clamp(0.52rem,1.4vw,0.65rem);color:#999;font-weight:700">~1M yrs ago</div>
+          <div style="width:3px;height:10px;background:#a5d6a7;border-radius:2px"></div>
+          <div style="background:linear-gradient(135deg,#FFD600,#FF8F00);border-radius:40px;padding:7px 18px;font-family:'Fredoka One',cursive;font-size:clamp(0.9rem,3vw,1.2rem);color:#1a1a2e;box-shadow:0 3px 12px rgba(255,143,0,0.4);animation:pulse-glow2 2s ease-in-out infinite">🧑 YOU! ⭐</div>
+        </div>
+
+      </div><!-- end grid -->
+
+      <div style="text-align:center;margin-top:8px;font-size:clamp(0.62rem,1.8vw,0.78rem);color:#777;font-style:italic;font-weight:700">🔬 Scientists used fossils &amp; DNA to discover this whole amazing family tree!</div>
+    </div>
+  </div>
+
+</div><!-- end #app -->
+
+<!-- FIXED READ TO ME BUTTON — always visible above nav -->
+<button id="speak-fixed" onclick="speakCurrent()">🔊 Read to me!</button>
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="changeSlide(-1)">← Back</button>
+  <div class="dot-container" id="dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+const TOTAL = 9;
+let current = 0;
+let speaking = false;
+
+const TEXTS = [
+  "How Did We Get Here? The amazing true story of how all life on Earth — including us — came to be!",
+  "It all began in the ocean! A very, very long time ago — about 4 billion years ago — Earth was covered mostly in water. Tiny tiny living things called microbes appeared in the ocean. They were so small you'd need a microscope to see them! These little guys were the very first life on Earth — the great great great grandparents of every living thing today!",
+  "What is evolution? Imagine your family. You look a little like your mom or dad, right? But not exactly the same! Evolution is how living things slowly change over millions and millions of years. Each baby is just a tiny bit different from its parents. The ones who are best at finding food, staying safe, and having babies of their own survive. Little by little, after millions of babies, animals can look very different!",
+  "Fish crawled onto land! After millions of years, some fish started growing little leg-like fins. They could wiggle up onto land! These turned into reptiles and amphibians — things like frogs, lizards, and dinosaurs! Dinosaurs ruled the Earth for 165 million years — way longer than humans have been around. Then, about 66 million years ago, a giant asteroid hit Earth and most dinosaurs disappeared. But some survived and became birds!",
+  "Mammals appear! After the dinosaurs, small furry mammals got their chance to grow and spread everywhere! Mammals are animals that are warm and fuzzy, drink their mama's milk as babies, and are warm-blooded — like dogs, elephants, whales, and you! Over millions of years, mammals evolved into all sorts of creatures. Some went back to the sea and became whales. Some grew wings. And some climbed into the trees.",
+  "Our ancient relatives! Here is something amazing: humans and chimpanzees share 98% of the same DNA! That is like being almost-identical recipes with just a few ingredients changed. We didn't come from chimps though — it's more like we have the same great great grandparents! About 6 million years ago, our family tree branched apart. Slowly, our ancestors stood upright, grew bigger brains, learned to use tools, make fire, and tell stories.",
+  "How do scientists know? Great question! Scientists are like nature's detectives, and they have amazing clues. Fossils are bones and shells turned to stone, millions of years old! DNA is the tiny instructions inside every cell that show who is related to who! Rock layers show Earth keeps records like a history book in stone! Thousands of scientists all over the world have checked these clues for over 150 years. Evolution is one of the best-proven ideas in all of science!",
+  "You are amazing! You are made of billions of years of incredible changes. Every creature that ever lived before you was brave, clever, and lucky enough to survive! Science helps us understand our amazing universe — and knowing the truth makes the world even more wonderful, not less. Keep asking questions. Keep being curious. That is what scientists do — and maybe you will be one too!",
+  "Our Family Tree! Six million years ago, our family and chimpanzees had the very same great great grandparent! Then the family split into two branches. One branch became gorillas and chimps — and they still share 98 percent of the same DNA as you today! The other branch slowly stood up tall, learned to walk, discovered fire, made tools, and eventually became... you! Scientists figured all this out by finding ancient bones called fossils, and by reading the DNA inside living animals. Isn't that incredible?"
+];
+
+function buildDots() {
+  const c = document.getElementById('dots');
+  for (let i=0;i<TOTAL;i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' on':'');
+    d.onclick = () => goTo(i);
+    c.appendChild(d);
+  }
+}
+
+function updateProgress() {
+  const pct = ((current+1)/TOTAL)*100;
+  document.getElementById('progress').style.width = pct+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===current));
+  document.getElementById('btn-prev').style.opacity = current===0?'0.3':'1';
+}
+
+function goTo(n) {
+  window.speechSynthesis?.cancel();
+  document.querySelector('.slide.active')?.classList.remove('active');
+  current = Math.max(0,Math.min(TOTAL-1,n));
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  updateProgress();
+}
+
+function changeSlide(dir) { goTo(current+dir); }
+
+function speakCurrent() { speak(current); }
+
+// Unlock speech on iOS/Safari - must be called from a direct user gesture
+let audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  // Warm up the speech engine with a silent utterance
+  const u = new SpeechSynthesisUtterance(' ');
+  u.volume = 0;
+  window.speechSynthesis?.speak(u);
+}
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
+
+function hideBanner() {
+  const b = document.getElementById('audio-banner');
+  if (b) { b.style.opacity = '0'; setTimeout(() => b.remove(), 600); }
+}
+document.addEventListener('click', hideBanner, { once: true });
+document.addEventListener('touchstart', hideBanner, { once: true });
+
+function speak(idx) {
+  if (!window.speechSynthesis) {
+    alert("Text-to-speech isn't available in this browser. Try Chrome or Safari on a phone!");
+    return;
+  }
+  window.speechSynthesis.cancel();
+
+  // Small delay ensures cancel() has finished before speaking (fixes Safari bug)
+  setTimeout(() => {
+    const sentences = TEXTS[idx].match(/[^.!?]+[.!?]+/g) || [TEXTS[idx]];
+
+    // Load voices — on some browsers they load async
+    let voices = speechSynthesis.getVoices();
+
+    const findVoice = (v) =>
+      v.find(x => x.name === 'Samantha') ||
+      v.find(x => x.name === 'Karen') ||
+      v.find(x => x.name === 'Moira') ||
+      v.find(x => x.name === 'Google UK English Female') ||
+      v.find(x => x.name === 'Microsoft Zira Desktop - English (United States)') ||
+      v.find(x => x.name.toLowerCase().includes('female') && x.lang.startsWith('en')) ||
+      v.find(x => x.lang === 'en-US' && x.localService) ||
+      v.find(x => x.lang.startsWith('en-')) ||
+      v.find(x => x.lang.startsWith('en'));
+
+    let preferred = findVoice(voices);
+
+    // If voices haven't loaded yet, wait for them
+    if (!preferred && speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = () => {
+        voices = speechSynthesis.getVoices();
+        preferred = findVoice(voices);
+        runSpeech(sentences, preferred);
+      };
+    } else {
+      runSpeech(sentences, preferred);
+    }
+  }, 120);
+}
+
+function runSpeech(sentences, preferred) {
+  let i = 0;
+  function next() {
+    if (i >= sentences.length) return;
+    const text = sentences[i].trim();
+    if (!text) { i++; next(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    if (preferred) u.voice = preferred;
+    u.rate = 0.82;
+    u.pitch = 1.08;
+    u.volume = 1;
+    if (text.includes('!')) { u.pitch = 1.18; u.rate = 0.88; }
+    if (text.includes('?')) { u.pitch = 1.14; u.rate = 0.80; }
+    i++;
+    u.onend = next;
+    u.onerror = () => { i++; next(); }; // skip on error, keep going
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+
+// Keyboard nav
+document.addEventListener('keydown', function(e) {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') changeSlide(1);
+  if (e.key==='ArrowLeft'||e.key==='ArrowUp') changeSlide(-1);
+});
+
+// Touch swipe
+let touchX = null;
+document.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', function(e) {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+  touchX = null;
+});
+
+// Pre-load voices
+if (window.speechSynthesis) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = function() { speechSynthesis.getVoices(); };
+}
+
+buildDots();
+updateProgress();
+</script>
+</body>
+</html>

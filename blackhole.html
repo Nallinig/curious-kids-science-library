@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Holes! ⚫🌟</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@600;700;800&display=swap');
+
+:root {
+  --deep: #03001C;
+  --space: #070B2A;
+  --purple: #6B21A8;
+  --violet: #A855F7;
+  --pink: #EC4899;
+  --gold: #FFD700;
+  --teal: #22D3EE;
+  --white: #F0F4FF;
+  --nav-h: 64px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--deep);
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* STARFIELD */
+#stars {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.star-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--d,2s) ease-in-out infinite;
+  animation-delay: var(--dl,0s);
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.6); }
+}
+
+/* SLIDES */
+#app { position: relative; width: 100vw; height: 100vh; }
+
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.7s ease;
+  z-index: 1;
+  padding-bottom: var(--nav-h);
+}
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* CARD */
+.card {
+  background: rgba(10, 8, 35, 0.88);
+  border: 2px solid rgba(168, 85, 247, 0.4);
+  border-radius: 24px;
+  padding: 16px 22px;
+  max-width: min(640px, 93vw);
+  box-shadow: 0 0 40px rgba(168,85,247,0.25), 0 8px 32px rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 5;
+  animation: cardrise 0.7s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes cardrise {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.slide.active .card { animation: cardrise 0.7s cubic-bezier(.22,1,.36,1) forwards; }
+
+.slide-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.slide-text {
+  font-size: clamp(0.88rem, 2.5vw, 1.08rem);
+  line-height: 1.55;
+  color: #d4d8ff;
+  font-weight: 700;
+}
+.slide-text br { display: block; margin-bottom: 6px; content: ""; }
+
+/* HIGHLIGHTS */
+.hl  { background: rgba(255,215,0,0.2); border-radius: 4px; padding: 0 3px; color: #FFD700; font-weight: 800; }
+.hlp { background: rgba(236,72,153,0.2); border-radius: 4px; padding: 0 3px; color: #F9A8D4; font-weight: 800; }
+.hlt { background: rgba(34,211,238,0.2); border-radius: 4px; padding: 0 3px; color: #67E8F9; font-weight: 800; }
+.hlv { background: rgba(168,85,247,0.2); border-radius: 4px; padding: 0 3px; color: #C084FC; font-weight: 800; }
+
+/* BIG EMOJI */
+.big-emoji {
+  font-size: clamp(2.5rem, 7vw, 3.8rem);
+  display: block; text-align: center;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 12px rgba(168,85,247,0.7));
+  animation: floaty 3s ease-in-out infinite;
+}
+@keyframes floaty {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+/* BLACK HOLE ANIMATION */
+.blackhole-wrap {
+  display: flex; justify-content: center; align-items: center;
+  margin-bottom: 8px; position: relative;
+  height: clamp(90px, 15vw, 130px);
+}
+.bh-outer {
+  width: clamp(90px,14vw,120px); height: clamp(90px,14vw,120px);
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 38%, #2D0050 55%, #6B21A8 70%, #A855F7 82%, transparent 100%);
+  box-shadow: 0 0 0 4px rgba(168,85,247,0.3), 0 0 30px rgba(168,85,247,0.5), 0 0 60px rgba(236,72,153,0.3);
+  animation: bh-pulse 3s ease-in-out infinite;
+  position: relative;
+}
+@keyframes bh-pulse {
+  0%,100% { box-shadow: 0 0 0 4px rgba(168,85,247,0.3), 0 0 30px rgba(168,85,247,0.5), 0 0 60px rgba(236,72,153,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(168,85,247,0.5), 0 0 50px rgba(168,85,247,0.8), 0 0 90px rgba(236,72,153,0.5); }
+}
+.bh-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  animation: spin var(--sp, 4s) linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.orbit-star {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: orbit var(--orb, 5s) linear infinite;
+  animation-delay: var(--od, 0s);
+}
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(clamp(55px,9vw,75px)) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(clamp(55px,9vw,75px)) rotate(-360deg); }
+}
+
+/* STAR BEING EATEN */
+.eating-star {
+  position: absolute;
+  font-size: 1.4rem;
+  animation: getEaten 4s ease-in infinite;
+}
+@keyframes getEaten {
+  0%   { transform: translate(80px, -40px) scale(1); opacity: 1; }
+  100% { transform: translate(0px, 0px) scale(0); opacity: 0; }
+}
+
+/* COMPARISON VISUAL */
+.compare-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin: 10px 0; flex-wrap: wrap;
+}
+.compare-box {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: 14px;
+  padding: 8px 14px;
+  text-align: center;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  color: #d4d8ff;
+  font-weight: 700;
+}
+.compare-box .cb-emoji { font-size: clamp(1.5rem, 4vw, 2rem); display: block; margin-bottom: 4px; }
+
+/* FACT PILLS */
+.fact-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+}
+.fact-pill {
+  background: rgba(168,85,247,0.15);
+  border: 1px solid rgba(168,85,247,0.4);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: clamp(0.72rem, 1.8vw, 0.85rem);
+  color: #C084FC;
+  font-weight: 800;
+}
+
+/* YOU ARE AMAZING final slide */
+.final-glow {
+  text-align: center;
+}
+.final-glow .big-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #FFD700, #EC4899, #A855F7, #22D3EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%,100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+/* PROGRESS BAR */
+#progress {
+  position: fixed; top: 0; left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #A855F7, #EC4899, #FFD700);
+  transition: width 0.5s ease;
+  z-index: 200;
+  border-radius: 0 2px 2px 0;
+}
+
+/* NAV */
+#nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px;
+  background: rgba(3,0,28,0.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(168,85,247,0.2);
+  z-index: 100;
+}
+.nav-btn {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 700;
+  padding: 8px 24px;
+  border: none; border-radius: 50px;
+  cursor: pointer; transition: transform 0.2s;
+}
+.nav-btn:hover { transform: scale(1.07); }
+#btn-prev { background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.3); }
+#btn-next { background: linear-gradient(135deg, #7C3AED, #EC4899); color: white; }
+
+.dot-row { display: flex; gap: 7px; align-items: center; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer; transition: all 0.3s;
+}
+.dot.on { background: #A855F7; transform: scale(1.4); box-shadow: 0 0 6px #A855F7; }
+
+/* FIXED READ BUTTON */
+#speak-fixed {
+  position: fixed; bottom: 74px; right: 16px;
+  z-index: 150;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px;
+  border: none; border-radius: 50px;
+  font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(135deg, #7C3AED, #EC4899);
+  color: white;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.55);
+  transition: transform 0.2s;
+}
+#speak-fixed:hover { transform: scale(1.08); }
+#speak-fixed:active { transform: scale(0.96); }
+
+/* AUDIO BANNER */
+#audio-banner {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  background: rgba(124,58,237,0.92);
+  color: white; font-family: 'Baloo 2', cursive; font-size: 0.9rem; font-weight: 700;
+  padding: 7px 20px; border-radius: 40px;
+  z-index: 300; pointer-events: none;
+  transition: opacity 0.5s; white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.5);
+}
+
+/* NEBULA BG BLOBS */
+.nebula {
+  position: fixed; border-radius: 50%;
+  filter: blur(60px); opacity: 0.12;
+  pointer-events: none; z-index: 0;
+  animation: nebula-drift var(--nd, 12s) ease-in-out infinite alternate;
+}
+@keyframes nebula-drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(30px, 20px) scale(1.1); }
+}
+</style>
+</head>
+<body>
+
+<div id="audio-banner">👆 Tap anywhere to enable audio!</div>
+<div id="progress"></div>
+
+<!-- STARFIELD -->
+<div id="stars"></div>
+
+<!-- NEBULA BLOBS -->
+<div class="nebula" style="width:400px;height:400px;background:#6B21A8;top:-100px;left:-100px;--nd:14s"></div>
+<div class="nebula" style="width:300px;height:300px;background:#EC4899;bottom:-50px;right:-50px;--nd:10s"></div>
+<div class="nebula" style="width:250px;height:250px;background:#22D3EE;top:40%;left:60%;--nd:16s"></div>
+
+<div id="app">
+
+<!-- SLIDE 0: TITLE -->
+<div class="slide active">
+  <div style="text-align:center;margin-bottom:10px">
+    <div class="blackhole-wrap" style="height:clamp(110px,18vw,150px)">
+      <div class="bh-outer" style="width:clamp(100px,16vw,130px);height:clamp(100px,16vw,130px)">
+        <div class="orbit-star" style="--orb:6s;--od:0s">⭐</div>
+        <div class="orbit-star" style="--orb:4s;--od:2s">✨</div>
+        <div class="orbit-star" style="--orb:8s;--od:1s">💫</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="slide-title" style="font-size:clamp(1.8rem,5vw,2.6rem)">What is a Black Hole? ⚫</div>
+    <div class="slide-text" style="margin-top:6px">
+      A magical space adventure for curious kids! 🚀<br>
+      The most mysterious thing in the whole universe — and YOU get to learn about it today!
+    </div>
+    <div class="fact-row" style="justify-content:center;margin-top:10px">
+      <span class="fact-pill">⭐ Stars</span>
+      <span class="fact-pill">⚫ Black Holes</span>
+      <span class="fact-pill">🌌 Galaxies</span>
+      <span class="fact-pill">🔭 Scientists</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 1: WHAT IS A STAR -->
+<div class="slide">
+  <span class="big-emoji" style="animation-delay:0.2s">☀️</span>
+  <div class="card">
+    <div class="slide-title">First — What is a Star? ☀️</div>
+    <div class="slide-text">
+      You know our Sun? That big bright ball that lights up our day? <span class="hl">Our Sun is a star!</span><br>
+      Stars are giant balls of super-hot gas that <span class="hlp">glow and shine</span> for billions of years.<br>
+      There are <span class="hlt">more stars in space than grains of sand on ALL of Earth's beaches!</span> 🏖️<br>
+      Stars are born, they live for a very long time, and then... they die. And when a really BIG star dies, something <span class="hl">incredible</span> happens! 🌟
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: HOW BLACK HOLES ARE BORN -->
+<div class="slide">
+  <div class="card">
+    <div class="slide-title">How is a Black Hole Born? 💥</div>
+    <div class="slide-text">
+      Imagine a really, really <span class="hl">HUGE star</span> — much bigger than our Sun.<br>
+      When this giant star gets old and runs out of fuel, it goes <span class="hlp">BOOM!</span> — a giant explosion called a <span class="hlp">supernova!</span> 💥<br>
+      After the explosion, all the leftover stuff <span class="hlt">squishes together</span> into a tiny, tiny point.<br>
+      This squishing is SO powerful that it creates a <span class="hl">black hole</span> — the most powerful thing in the universe! ⚫
+    </div>
+    <div class="compare-row">
+      <div class="compare-box"><span class="cb-emoji">⭐</span>Giant Star<br><small style="color:#888">Very big!</small></div>
+      <div style="font-size:1.5rem">💥→</div>
+      <div class="compare-box"><span class="cb-emoji">⚫</span>Black Hole<br><small style="color:#888">Tiny but MIGHTY!</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: WHAT IS A BLACK HOLE -->
+<div class="slide">
+  <div class="blackhole-wrap">
+    <div class="bh-outer">
+      <div class="eating-star">⭐</div>
+      <div class="orbit-star" style="--orb:5s;--od:0s">💫</div>
+      <div class="orbit-star" style="--orb:7s;--od:2.5s">✨</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="slide-title">What IS a Black Hole? ⚫</div>
+    <div class="slide-text">
+      A black hole is like a <span class="hl">giant invisible vacuum cleaner</span> in space!<br>
+      It pulls everything nearby <span class="hlp">towards it</span> — gas, dust, even light!<br>
+      That's why it looks <span class="hlt">completely black</span> — no light can escape from it, so we can't see inside! 🔦<br>
+      Think of it like a <span class="hlv">drain in a bathtub</span> — everything swirls around and gets pulled in! 🛁<br>
+      <span class="hl">Fun fact: it's not actually a hole!</span> It's a tiny ball of super-squished stuff — we just call it a "hole" because nothing can get out! 😄
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: HOW BIG -->
+<div class="slide">
+  <span class="big-emoji">📏</span>
+  <div class="card">
+    <div class="slide-title">How Big Are They? 📏</div>
+    <div class="slide-text">
+      Black holes come in different sizes — just like dogs! 🐕<br>
+      <span class="hl">Small ones</span> can be as tiny as a city — but weigh more than our whole Sun!<br>
+      <span class="hlp">Giant ones</span> called <em>supermassive black holes</em> are at the centre of almost every galaxy — including our own Milky Way! 🌌<br>
+      The one in our galaxy is called <span class="hlt">Sagittarius A*</span> and it's 4 million times heavier than our Sun! 🤯
+    </div>
+    <div class="compare-row">
+      <div class="compare-box"><span class="cb-emoji">🏙️</span>Small Black Hole<br><small style="color:#888">Size of a city</small></div>
+      <div class="compare-box"><span class="cb-emoji">🌌</span>Supermassive<br><small style="color:#888">Millions of Suns!</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: DOES IT EAT EVERYTHING -->
+<div class="slide">
+  <span class="big-emoji" style="font-size:clamp(2rem,6vw,3.2rem)">😋⭐</span>
+  <div class="card">
+    <div class="slide-title">Does it Eat Everything? 😋</div>
+    <div class="slide-text">
+      Only things that get <span class="hl">very close</span> get pulled in!<br>
+      Our Earth is safe — we are very, very far from any black hole. 🌍✅<br>
+      The closest black hole to us is <span class="hlp">1,500 light years away</span> — that means even travelling at the speed of light, it would take 1,500 years to get there!<br>
+      So <span class="hlt">no need to worry</span> — you are perfectly safe! 😊<br>
+      Black holes mostly eat gas and dust floating nearby in space. 🌫️
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: CAN WE SEE THEM -->
+<div class="slide">
+  <span class="big-emoji">🔭</span>
+  <div class="card">
+    <div class="slide-title">Can We See a Black Hole? 🔭</div>
+    <div class="slide-text">
+      Since no light escapes, we <span class="hl">can't see the black hole itself</span> — but we can see its shadow!<br>
+      In 2019, scientists took the <span class="hlp">very first photo of a black hole!</span> 📸<br>
+      It looked like a glowing orange ring with a dark circle in the middle — like a cosmic donut! 🍩<br>
+      It took <span class="hlt">over 200 scientists</span> from all around the world working together to get that one amazing photo! 🌍🤝
+    </div>
+    <div class="compare-row">
+      <div class="compare-box" style="font-size:clamp(1.2rem,3vw,1.6rem);padding:10px 18px">
+        🍩<br><small style="color:#C084FC;font-size:0.8rem">First ever black hole photo — 2019!</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: FUN FACTS -->
+<div class="slide">
+  <span class="big-emoji">🤩</span>
+  <div class="card">
+    <div class="slide-title">Wild Space Facts! 🤩</div>
+    <div class="slide-text">
+      Ready for some mind-blowing facts?
+    </div>
+    <div class="fact-row" style="flex-direction:column;gap:8px;margin-top:10px">
+      <div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:8px 12px;color:#FDE68A;font-size:clamp(0.8rem,2.2vw,0.95rem);font-weight:700">
+        ⏰ Near a black hole, <span class="hl">time goes slower!</span> If you could survive next to one, you'd age more slowly than people on Earth!
+      </div>
+      <div style="background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:12px;padding:8px 12px;color:#FBCFE8;font-size:clamp(0.8rem,2.2vw,0.95rem);font-weight:700">
+        🍝 Scientists call getting stretched by a black hole <span class="hlp">"spaghettification"</span> — you'd get stretched like a noodle!
+      </div>
+      <div style="background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.3);border-radius:12px;padding:8px 12px;color:#A5F3FC;font-size:clamp(0.8rem,2.2vw,0.95rem);font-weight:700">
+        🌌 There are <span class="hlt">billions of black holes</span> in our galaxy alone — but they're so far away they're harmless!
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: YOU ARE A SCIENTIST -->
+<div class="slide">
+  <div class="blackhole-wrap" style="height:clamp(80px,13vw,110px)">
+    <div class="bh-outer" style="width:clamp(80px,12vw,100px);height:clamp(80px,12vw,100px)">
+      <div class="orbit-star" style="--orb:5s;--od:0s">🔭</div>
+      <div class="orbit-star" style="--orb:7s;--od:1.5s">⭐</div>
+    </div>
+  </div>
+  <div class="card final-glow" style="text-align:center">
+    <div class="big-title">YOU Are a Space Explorer! 🚀</div>
+    <div class="slide-text" style="margin-top:10px">
+      You now know something that <span class="hl">most grown-ups don't know!</span><br>
+      Black holes are real, they are amazing, and scientists are discovering new things about them every day.<br>
+      <span class="hlp">Maybe YOU will be the scientist</span> who discovers something brand new about black holes one day! 🌟<br>
+      <span class="hlt">Keep asking questions — that's exactly what scientists do!</span> 🔬🚀
+    </div>
+    <div class="fact-row" style="justify-content:center;margin-top:10px">
+      <span class="fact-pill">🚀 Keep exploring!</span>
+      <span class="fact-pill">🔭 Keep asking!</span>
+      <span class="fact-pill">⭐ Keep dreaming!</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #app -->
+
+<button id="speak-fixed" onclick="speakCurrent()">🔊 Read to me!</button>
+
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="changeSlide(-1)">← Back</button>
+  <div class="dot-row" id="dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+// Generate starfield
+(function() {
+  const s = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const d = document.createElement('div');
+    d.className = 'star-dot';
+    const sz = Math.random() * 3 + 1;
+    d.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --d:${1.5 + Math.random()*3}s;
+      --dl:${Math.random()*3}s;
+    `;
+    s.appendChild(d);
+  }
+})();
+
+const TOTAL = 9;
+let current = 0;
+
+const TEXTS = [
+  "What is a Black Hole? A magical space adventure for curious kids! The most mysterious thing in the whole universe — and YOU get to learn about it today! We will learn about stars, black holes, galaxies, and the scientists who study them!",
+  "First, what is a star? You know our Sun? That big bright ball that lights up our day? Our Sun is a star! Stars are giant balls of super-hot gas that glow and shine for billions of years. There are more stars in space than grains of sand on all of Earth's beaches! Stars are born, they live for a very long time, and then they die. And when a really BIG star dies, something incredible happens!",
+  "How is a black hole born? Imagine a really really HUGE star — much bigger than our Sun. When this giant star gets old and runs out of fuel, it goes BOOM — a giant explosion called a supernova! After the explosion, all the leftover stuff squishes together into a tiny tiny point. This squishing is SO powerful that it creates a black hole — the most powerful thing in the universe!",
+  "What IS a black hole? A black hole is like a giant invisible vacuum cleaner in space! It pulls everything nearby towards it — gas, dust, even light! That's why it looks completely black — no light can escape from it, so we can't see inside! Think of it like a drain in a bathtub — everything swirls around and gets pulled in! And here is a fun fact — it is not actually a hole! It is a tiny ball of super-squished stuff. We just call it a hole because nothing can get out!",
+  "How big are they? Black holes come in different sizes — just like dogs! Small ones can be as tiny as a city — but weigh more than our whole Sun! Giant ones called supermassive black holes are at the centre of almost every galaxy — including our own Milky Way! The one in our galaxy is called Sagittarius A-star and it's 4 million times heavier than our Sun!",
+  "Does it eat everything? Only things that get very close get pulled in! Our Earth is safe — we are very very far from any black hole. The closest black hole to us is 1500 light years away — that means even travelling at the speed of light, it would take 1500 years to get there! So no need to worry — you are perfectly safe! Black holes mostly eat gas and dust floating nearby in space.",
+  "Can we see a black hole? Since no light escapes, we can't see the black hole itself — but we can see its shadow! In 2019, scientists took the very first photo of a black hole! It looked like a glowing orange ring with a dark circle in the middle — like a cosmic donut! It took over 200 scientists from all around the world working together to get that one amazing photo!",
+  "Wild space facts! Ready for some mind-blowing facts? Near a black hole, time goes slower! If you could survive next to one, you would age more slowly than people on Earth! Scientists call getting stretched by a black hole spaghettification — you would get stretched like a noodle! And there are billions of black holes in our galaxy alone — but they are so far away they are harmless!",
+  "You are a space explorer! You now know something that most grown-ups don't know! Black holes are real, they are amazing, and scientists are discovering new things about them every day. Maybe YOU will be the scientist who discovers something brand new about black holes one day! Keep asking questions — that's exactly what scientists do!"
+];
+
+function buildDots() {
+  const c = document.getElementById('dots');
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.onclick = () => goTo(i);
+    c.appendChild(d);
+  }
+}
+
+function updateProgress() {
+  const pct = ((current + 1) / TOTAL) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === current));
+  document.getElementById('btn-prev').style.opacity = current === 0 ? '0.3' : '1';
+  document.getElementById('btn-next').style.opacity = current === TOTAL-1 ? '0.3' : '1';
+}
+
+function goTo(n) {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  document.querySelector('.slide.active') && document.querySelector('.slide.active').classList.remove('active');
+  current = Math.max(0, Math.min(TOTAL - 1, n));
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  updateProgress();
+}
+
+function changeSlide(dir) { goTo(current + dir); }
+function speakCurrent() { speak(current); }
+
+// Audio unlock for mobile/Safari
+let audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  if (window.speechSynthesis) {
+    const u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+  }
+}
+function hideBanner() {
+  const b = document.getElementById('audio-banner');
+  if (b) { b.style.opacity = '0'; setTimeout(function() { b.remove(); }, 600); }
+}
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', hideBanner, { once: true });
+document.addEventListener('touchstart', hideBanner, { once: true });
+
+function speak(idx) {
+  if (!window.speechSynthesis) {
+    alert("Try opening this in Chrome for audio!");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  setTimeout(function() {
+    const sentences = TEXTS[idx].match(/[^.!?]+[.!?]+/g) || [TEXTS[idx]];
+    let voices = speechSynthesis.getVoices();
+
+    function findVoice(v) {
+      return v.find(function(x) { return x.name === 'Samantha'; }) ||
+             v.find(function(x) { return x.name === 'Karen'; }) ||
+             v.find(function(x) { return x.name === 'Moira'; }) ||
+             v.find(function(x) { return x.name === 'Google UK English Female'; }) ||
+             v.find(function(x) { return x.name === 'Microsoft Zira Desktop - English (United States)'; }) ||
+             v.find(function(x) { return x.lang === 'en-US' && x.localService; }) ||
+             v.find(function(x) { return x.lang.startsWith('en'); });
+    }
+
+    let preferred = findVoice(voices);
+
+    if (!preferred) {
+      speechSynthesis.onvoiceschanged = function() {
+        voices = speechSynthesis.getVoices();
+        preferred = findVoice(voices);
+        runSpeech(sentences, preferred);
+      };
+    } else {
+      runSpeech(sentences, preferred);
+    }
+  }, 120);
+}
+
+function runSpeech(sentences, preferred) {
+  let i = 0;
+  function next() {
+    if (i >= sentences.length) return;
+    const text = sentences[i].trim();
+    if (!text) { i++; next(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    if (preferred) u.voice = preferred;
+    u.rate = 0.82;
+    u.pitch = 1.08;
+    u.volume = 1;
+    if (text.includes('!')) { u.pitch = 1.18; u.rate = 0.88; }
+    if (text.includes('?')) { u.pitch = 1.14; u.rate = 0.80; }
+    i++;
+    u.onend = next;
+    u.onerror = function() { i++; next(); };
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+
+// Keyboard nav
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+});
+
+// Touch swipe
+let touchX = null;
+document.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', function(e) {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+  touchX = null;
+});
+
+// Pre-load voices
+if (window.speechSynthesis) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = function() { speechSynthesis.getVoices(); };
+}
+
+buildDots();
+updateProgress();
+</script>
+</body>
+</html>

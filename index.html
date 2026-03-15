@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curious Kids Science Library 🚀</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800;900&family=Nunito:wght@600;700;800;900&display=swap');
+
+:root {
+  --star: #FFD700;
+  --pink: #FF6B9D;
+  --purple: #9B59B6;
+  --blue: #4ECDC4;
+  --orange: #FF8C42;
+  --green: #56C596;
+  --dark: #0D0D2B;
+  --card-bg: rgba(255,255,255,0.06);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* STARFIELD */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: white; animation: twinkle var(--d) ease-in-out infinite; animation-delay: var(--dl); }
+@keyframes twinkle { 0%,100%{opacity:0.15;transform:scale(1)} 50%{opacity:1;transform:scale(1.6)} }
+
+/* FLOATING PLANETS */
+.planet { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; }
+.p1 { width: 180px; height: 180px; top: -60px; right: -50px; background: radial-gradient(circle at 35% 35%, #FF7043, #8D3000); opacity: 0.25; animation: drift1 20s ease-in-out infinite; }
+.p2 { width: 120px; height: 120px; bottom: 10%; left: -40px; background: radial-gradient(circle at 35% 35%, #9B59B6, #4A235A); opacity: 0.2; animation: drift2 25s ease-in-out infinite; }
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-20px,20px)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-15px)} }
+
+/* HEADER */
+header {
+  position: relative; z-index: 10;
+  text-align: center;
+  padding: 52px 20px 32px;
+}
+.header-badge {
+  display: inline-block;
+  background: rgba(255,215,0,0.12);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 40px;
+  padding: 6px 20px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--star);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  animation: fadeUp 0.6s ease forwards;
+}
+h1 {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2rem, 6vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: white;
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+h1 span { color: var(--star); }
+.subtitle {
+  margin-top: 12px;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: rgba(255,255,255,0.6);
+  font-weight: 700;
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+.rocket { display: inline-block; animation: rocketBounce 2s ease-in-out infinite; }
+@keyframes rocketBounce { 0%,100%{transform:translateY(0) rotate(-10deg)} 50%{transform:translateY(-12px) rotate(-10deg)} }
+
+/* STATS ROW */
+.stats {
+  display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+  margin: 24px auto 0;
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+.stat {
+  text-align: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 10px 20px;
+}
+.stat-n { font-family: 'Baloo 2', cursive; font-size: 1.6rem; font-weight: 900; color: var(--star); line-height: 1; }
+.stat-l { font-size: 0.72rem; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* GRID */
+.grid-section { position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 16px 20px 60px; }
+.section-label {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 18px; }
+
+/* CARD */
+.card {
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  padding: 24px;
+  text-decoration: none;
+  display: flex; flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(.22,1,.36,1), border-color 0.3s, box-shadow 0.3s;
+  animation: fadeUp 0.6s ease forwards;
+  opacity: 0;
+  cursor: pointer;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-glow, rgba(255,215,0,0.05));
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 24px;
+}
+.card:hover { transform: translateY(-6px) scale(1.02); border-color: var(--card-accent, rgba(255,215,0,0.4)); box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px var(--card-accent, rgba(255,215,0,0.2)); }
+.card:hover::before { opacity: 1; }
+
+.card-emoji { font-size: 2.8rem; line-height: 1; display: block; }
+.card-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+}
+.card-desc {
+  font-size: clamp(0.78rem, 1.8vw, 0.88rem);
+  color: rgba(255,255,255,0.55);
+  font-weight: 700;
+  line-height: 1.5;
+  flex: 1;
+}
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 4px;
+}
+.card-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+}
+.card-tag.both { background: rgba(255,215,0,0.12); color: var(--star); }
+.card-tag.akhil { background: rgba(78,205,196,0.12); color: var(--blue); }
+.card-tag.siena { background: rgba(255,107,157,0.12); color: var(--pink); }
+.card-arrow {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 0.9rem;
+  transition: background 0.2s, transform 0.2s;
+}
+.card:hover .card-arrow { background: var(--card-accent, rgba(255,215,0,0.3)); transform: translateX(3px); }
+
+/* CARD COLOUR THEMES */
+.card.c-gold   { --card-accent: rgba(255,215,0,0.4);  --card-glow: rgba(255,215,0,0.05); }
+.card.c-red    { --card-accent: rgba(255,112,67,0.5);  --card-glow: rgba(255,112,67,0.06); }
+.card.c-blue   { --card-accent: rgba(78,205,196,0.5);  --card-glow: rgba(78,205,196,0.06); }
+.card.c-purple { --card-accent: rgba(155,89,182,0.5);  --card-glow: rgba(155,89,182,0.06); }
+.card.c-green  { --card-accent: rgba(86,197,150,0.5);  --card-glow: rgba(86,197,150,0.06); }
+.card.c-pink   { --card-accent: rgba(255,107,157,0.5); --card-glow: rgba(255,107,157,0.06); }
+.card.c-orange { --card-accent: rgba(255,140,66,0.5);  --card-glow: rgba(255,140,66,0.06); }
+.card.c-teal   { --card-accent: rgba(72,219,251,0.5);  --card-glow: rgba(72,219,251,0.06); }
+
+/* FOOTER */
+footer {
+  position: relative; z-index: 10;
+  text-align: center;
+  padding: 24px 20px 40px;
+  color: rgba(255,255,255,0.25);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+footer span { color: var(--pink); }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="planet p1"></div>
+<div class="planet p2"></div>
+
+<header>
+  <div class="header-badge">✨ A Science Adventure Awaits</div>
+  <h1>Curious Kids<br><span>Science Library</span> <span class="rocket">🚀</span></h1>
+  <p class="subtitle">Tap any story to begin your adventure!</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">10</div><div class="stat-l">Stories</div></div>
+    <div class="stat"><div class="stat-n">🔊</div><div class="stat-l">Read Aloud</div></div>
+    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Wonder</div></div>
+  </div>
+</header>
+
+<div class="grid-section">
+  <div class="section-label">📚 All Stories</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  Made with <span>♥</span> for curious minds everywhere &nbsp;·&nbsp; Tap · Explore · Wonder
+</footer>
+
+<script>
+const stories = [
+  {
+    file: "evolution.html",
+    emoji: "🧬",
+    title: "The Story of Evolution",
+    desc: "How did all living things on Earth come to be? Travel billions of years back and discover how life slowly changed and adapted!",
+    tag: "both", tagLabel: "For Both",
+    color: "c-green",
+    delay: 0
+  },
+  {
+    file: "blackhole.html",
+    emoji: "⚫",
+    title: "Black Holes",
+    desc: "What happens when a star gets too old? Discover the most mysterious and powerful objects in the entire universe!",
+    tag: "akhil", tagLabel: "Akhil's Pick",
+    color: "c-purple",
+    delay: 0.05
+  },
+  {
+    file: "life-on-mars.html",
+    emoji: "🔴",
+    title: "Life on Mars?",
+    desc: "Was there ever life on Mars? Is there life there NOW? Could humans live there one day? One of science's greatest mysteries!",
+    tag: "akhil", tagLabel: "Akhil's Pick",
+    color: "c-red",
+    delay: 0.1
+  },
+  {
+    file: "scarlet-monkey-flower1.html",
+    emoji: "🌺",
+    title: "The Flower That Changed Its Mind",
+    desc: "Meet the Scarlet Monkey Flower — it switched from bees to hummingbirds with just ONE tiny gene change! Evolution in action!",
+    tag: "both", tagLabel: "For Both",
+    color: "c-pink",
+    delay: 0.15
+  },
+  {
+    file: "scarlet-monkey-flower2.html",
+    emoji: "🌺",
+    title: "The Flower That Outsmarted a Drought",
+    desc: "The same amazing flower — this time surviving California's worst ever drought! Scientists watched evolution happen in real time!",
+    tag: "both", tagLabel: "For Both",
+    color: "c-orange",
+    delay: 0.2
+  },
+  {
+    file: "sky-blue.html",
+    emoji: "💙",
+    title: "Why is the Sky Blue?",
+    desc: "Sunlight looks white — so why does the sky look blue? And why does it turn orange and red at sunset? Let's find out!",
+    tag: "both", tagLabel: "For Both",
+    color: "c-blue",
+    delay: 0.25
+  },
+  {
+    file: "skyblue-simple.html",
+    emoji: "🩵",
+    title: "Why is the Sky Blue? (Siena's Version)",
+    desc: "A special shorter and simpler version of the sky story — just for Siena! With a bonus peek at what colour the sky is on other planets!",
+    tag: "siena", tagLabel: "Siena's Pick",
+    color: "c-teal",
+    delay: 0.3
+  },
+  {
+    file: "starstory.html",
+    emoji: "⭐",
+    title: "Life of a Star",
+    desc: "Stars are born, they live for billions of years, and then they die in spectacular explosions — and YOU are made of their stardust!",
+    tag: "both", tagLabel: "For Both",
+    color: "c-gold",
+    delay: 0.35
+  },
+  {
+    file: "white-rhino.html",
+    emoji: "🦏",
+    title: "The White Rhino",
+    desc: "Meet Najin and Fatu — the last two Northern White Rhinos on Earth. An honest and hopeful story about fighting to save a species.",
+    tag: "akhil", tagLabel: "Akhil's Pick",
+    color: "c-orange",
+    delay: 0.4
+  },
+  {
+    file: "why-animals-endangered.html",
+    emoji: "🌍",
+    title: "Why Animals Get Endangered",
+    desc: "Why are some animals disappearing? And what can YOU do to help? A story of hope, action and the power of caring!",
+    tag: "siena", tagLabel: "Siena's Pick",
+    color: "c-green",
+    delay: 0.45
+  }
+];
+
+const tagClass = { both: "both", akhil: "akhil", siena: "siena" };
+
+const grid = document.getElementById('grid');
+stories.forEach(s => {
+  const a = document.createElement('a');
+  a.href = s.file;
+  a.className = `card ${s.color}`;
+  a.style.animationDelay = s.delay + 's';
+  a.innerHTML = `
+    <span class="card-emoji">${s.emoji}</span>
+    <div class="card-title">${s.title}</div>
+    <div class="card-desc">${s.desc}</div>
+    <div class="card-footer">
+      <span class="card-tag ${tagClass[s.tag]}">${s.tagLabel}</span>
+      <div class="card-arrow">→</div>
+    </div>
+  `;
+  grid.appendChild(a);
+});
+
+// Starfield
+const starsEl = document.getElementById('stars');
+for(let i = 0; i < 120; i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*3}s;--dl:${Math.random()*4}s`;
+  starsEl.appendChild(s);
+}
+</script>
+</body>
+</html>

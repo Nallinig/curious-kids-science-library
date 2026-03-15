@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why is the Sky Blue? 🌈</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@600;700;800&display=swap');
+
+:root {
+  --sky1: #87CEEB;
+  --sky2: #4A90D9;
+  --sky3: #1565C0;
+  --sun: #FFD700;
+  --cloud: #F0F8FF;
+  --nav-h: 64px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(180deg, #87CEEB 0%, #4A90D9 100%);
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+}
+
+/* SLIDE BACKGROUNDS */
+.slide { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.7s ease; z-index: 1; padding-bottom: var(--nav-h); }
+.slide.active { opacity: 1; pointer-events: all; }
+
+.bg-0 { background: linear-gradient(180deg, #0a0a2e 0%, #1a237e 50%, #283593 100%); }
+.bg-1 { background: linear-gradient(180deg, #87CEEB 0%, #42A5F5 60%, #90EE90 100%); }
+.bg-2 { background: linear-gradient(180deg, #1565C0 0%, #1976D2 50%, #42A5F5 100%); }
+.bg-3 { background: linear-gradient(180deg, #FF8F00 0%, #FFB300 40%, #87CEEB 100%); }
+.bg-4 { background: linear-gradient(180deg, #E3F2FD 0%, #90CAF9 50%, #42A5F5 100%); }
+.bg-5 { background: linear-gradient(180deg, #FF7043 0%, #FF8F00 30%, #FFA726 60%, #87CEEB 100%); }
+.bg-6 { background: linear-gradient(180deg, #1a237e 0%, #283593 40%, #1565C0 70%, #42A5F5 100%); }
+.bg-7 { background: linear-gradient(180deg, #87CEEB 0%, #64B5F6 40%, #A5D6A7 80%, #81C784 100%); }
+
+/* FLOATING ELEMENTS */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes drift { 0%,100%{transform:translateX(0) rotate(-2deg)} 50%{transform:translateX(18px) rotate(2deg)} }
+@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes cloud-move { 0%,100%{transform:translateX(0)} 50%{transform:translateX(25px)} }
+@keyframes rise { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes twinkle { 0%,100%{opacity:0.4;transform:scale(1)} 50%{opacity:1;transform:scale(1.5)} }
+@keyframes rainbow-shimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.2)} }
+
+.deco { position: absolute; pointer-events: none; user-select: none; }
+.cloud-deco { animation: cloud-move var(--cd,6s) ease-in-out infinite; animation-delay: var(--cdl,0s); }
+.float-deco { animation: float var(--fd,3s) ease-in-out infinite; animation-delay: var(--fdl,0s); }
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 24px;
+  padding: 14px 20px;
+  max-width: min(640px, 93vw);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  position: relative; z-index: 5;
+  animation: rise 0.7s cubic-bezier(.22,1,.36,1) forwards;
+}
+.slide-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.3rem,4vw,1.9rem);
+  font-weight: 800; line-height: 1.2; margin-bottom: 7px;
+}
+.slide-text {
+  font-size: clamp(0.85rem,2.4vw,1.05rem);
+  line-height: 1.52; color: #333; font-weight: 700;
+}
+.big-emoji {
+  font-size: clamp(2.2rem,6vw,3.5rem);
+  display: block; text-align: center; margin-bottom: 6px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  animation: float 3s ease-in-out infinite;
+}
+
+/* HIGHLIGHTS */
+.hl  { background: rgba(255,215,0,0.25); border-radius:4px; padding:0 3px; color:#B45309; font-weight:800; }
+.hlb { background: rgba(29,78,216,0.15); border-radius:4px; padding:0 3px; color:#1D4ED8; font-weight:800; }
+.hlr { background: rgba(239,68,68,0.15); border-radius:4px; padding:0 3px; color:#DC2626; font-weight:800; }
+.hlg { background: rgba(22,163,74,0.15); border-radius:4px; padding:0 3px; color:#15803D; font-weight:800; }
+
+/* RAINBOW */
+.rainbow {
+  width: min(500px, 88vw); height: clamp(60px,10vw,90px);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: transparent;
+  position: relative; margin: 8px auto 0;
+  animation: rainbow-shimmer 3s ease-in-out infinite;
+}
+.rainbow-arc {
+  position: absolute; left: 50%; bottom: 0;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transform: translateX(-50%);
+  border-top-style: solid; border-left: none; border-right: none; border-bottom: none;
+}
+
+/* LIGHT RAYS */
+.light-ray {
+  position: absolute;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(255,215,0,0.8), transparent);
+  transform-origin: top center;
+  animation: ray-pulse 2s ease-in-out infinite;
+  animation-delay: var(--rl, 0s);
+  border-radius: 2px;
+}
+@keyframes ray-pulse { 0%,100%{opacity:0.5;height:var(--rh,60px)} 50%{opacity:1;height:calc(var(--rh,60px) * 1.3)} }
+
+/* SCATTER DOTS */
+.scatter-dot {
+  width: clamp(10px,2vw,16px); height: clamp(10px,2vw,16px);
+  border-radius: 50%;
+  position: absolute;
+  animation: scatter var(--st,3s) ease-in-out infinite;
+  animation-delay: var(--sdl,0s);
+}
+@keyframes scatter { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(var(--sx,10px),var(--sy,-15px)) scale(1.3)} }
+
+/* COMPARE ROW */
+.compare-row { display:flex; align-items:center; justify-content:center; gap:10px; margin:10px 0; flex-wrap:wrap; }
+.compare-box { background:rgba(255,255,255,0.7); border:2px solid rgba(0,0,0,0.1); border-radius:14px; padding:8px 14px; text-align:center; font-size:clamp(0.75rem,2vw,0.88rem); color:#333; font-weight:700; }
+.compare-box .cb-e { font-size:clamp(1.5rem,4vw,2rem); display:block; margin-bottom:3px; }
+
+/* FACT PILLS */
+.fact-pill { background:rgba(29,78,216,0.1); border:1px solid rgba(29,78,216,0.3); border-radius:20px; padding:4px 12px; font-size:clamp(0.7rem,1.8vw,0.82rem); color:#1D4ED8; font-weight:800; }
+
+/* SUN VISUAL */
+.sun-wrap { display:flex; justify-content:center; margin-bottom:8px; position:relative; }
+.sun-circle {
+  width: clamp(60px,10vw,85px); height: clamp(60px,10vw,85px);
+  background: radial-gradient(circle, #FFF9C4 0%, #FFD700 50%, #FF8F00 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 20px #FFD700, 0 0 40px rgba(255,215,0,0.5);
+  animation: float 3s ease-in-out infinite;
+  position: relative; z-index: 2;
+}
+
+/* NAV */
+#nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); display:flex; align-items:center; justify-content:center; gap:14px; background:rgba(0,0,50,0.75); backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.15); z-index:100; }
+.nav-btn { font-family:'Baloo 2',cursive; font-size:1rem; font-weight:700; padding:8px 24px; border:none; border-radius:50px; cursor:pointer; transition:transform 0.2s; }
+.nav-btn:hover { transform:scale(1.07); }
+#btn-prev { background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3); }
+#btn-next { background:linear-gradient(135deg,#1565C0,#42A5F5); color:white; }
+.dot-row { display:flex; gap:7px; align-items:center; }
+.dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3); cursor:pointer; transition:all 0.3s; }
+.dot.on { background:#FFD700; transform:scale(1.4); box-shadow:0 0 6px #FFD700; }
+
+/* READ BUTTON */
+#speak-fixed { position:fixed; bottom:74px; right:16px; z-index:150; display:inline-flex; align-items:center; gap:7px; padding:10px 18px; border:none; border-radius:50px; font-family:'Baloo 2',cursive; font-size:1rem; font-weight:700; cursor:pointer; background:linear-gradient(135deg,#1565C0,#42A5F5); color:white; box-shadow:0 4px 20px rgba(21,101,192,0.55); transition:transform 0.2s; }
+#speak-fixed:hover { transform:scale(1.08); }
+
+/* PROGRESS */
+#progress { position:fixed; top:0; left:0; height:4px; background:linear-gradient(90deg,#1565C0,#42A5F5,#FFD700); transition:width 0.5s ease; z-index:200; border-radius:0 2px 2px 0; }
+
+/* AUDIO BANNER */
+#audio-banner { position:fixed; top:10px; left:50%; transform:translateX(-50%); background:rgba(21,101,192,0.92); color:white; font-family:'Baloo 2',cursive; font-size:0.9rem; font-weight:700; padding:7px 20px; border-radius:40px; z-index:300; pointer-events:none; transition:opacity 0.5s; white-space:nowrap; }
+
+/* STARS for dark slides */
+.star-bg { position:absolute; border-radius:50%; background:white; animation:twinkle var(--d,2s) ease-in-out infinite; animation-delay:var(--dl,0s); }
+</style>
+</head>
+<body>
+
+<div id="audio-banner">👆 Tap anywhere to enable audio!</div>
+<div id="progress"></div>
+<div id="app">
+
+<!-- SLIDE 0: TITLE -->
+<div class="slide bg-0 active">
+  <div class="star-bg" style="width:3px;height:3px;top:12%;left:15%;--d:2s;--dl:0s"></div>
+  <div class="star-bg" style="width:4px;height:4px;top:20%;left:70%;--d:2.5s;--dl:0.5s"></div>
+  <div class="star-bg" style="width:2px;height:2px;top:35%;left:40%;--d:1.8s;--dl:1s"></div>
+  <div class="star-bg" style="width:3px;height:3px;top:10%;left:85%;--d:3s;--dl:0.3s"></div>
+  <div class="star-bg" style="width:2px;height:2px;top:45%;left:10%;--d:2.2s;--dl:0.8s"></div>
+  <span class="big-emoji" style="font-size:clamp(3rem,8vw,5rem)">🌤️</span>
+  <div class="card" style="text-align:center;background:rgba(10,20,80,0.85);border:2px solid rgba(255,215,0,0.3)">
+    <div class="slide-title" style="color:#FFD700;font-size:clamp(1.6rem,5vw,2.4rem)">Why is the Sky Blue? 💙</div>
+    <div class="slide-text" style="color:#E0E8FF;margin-top:6px">
+      Have you ever looked up and wondered — why is the sky that beautiful blue colour? 🌈<br>
+      It's one of the best questions EVER — and the answer is amazing science!
+    </div>
+    <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <span class="fact-pill" style="background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:#FFD700">☀️ Sunlight</span>
+      <span class="fact-pill" style="background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:#FFD700">🌈 Colours</span>
+      <span class="fact-pill" style="background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:#FFD700">💨 Air</span>
+      <span class="fact-pill" style="background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:#FFD700">💙 Blue!</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 1: SUNLIGHT HAS ALL COLORS -->
+<div class="slide bg-1">
+  <div class="deco cloud-deco" style="top:8%;left:5%;font-size:3.5rem;--cd:7s">☁️</div>
+  <div class="deco cloud-deco" style="top:12%;right:8%;font-size:2.5rem;--cd:5s;--cdl:2s">☁️</div>
+  <div class="sun-wrap">
+    <div class="sun-circle"></div>
+  </div>
+  <div class="card">
+    <div class="slide-title" style="color:#B45309">Sunlight is FULL of Colours! 🌈</div>
+    <div class="slide-text">
+      Here's a secret — sunlight looks white or yellow, but it's actually <span class="hl">hiding ALL the colours of the rainbow inside it!</span><br>
+      Red, orange, yellow, green, blue, indigo, violet — they're ALL there, travelling together! 🎨<br>
+      You can see this when sunlight shines through a <span class="hlb">glass of water</span> or after rain — a rainbow appears and shows all the hidden colours! 🌈
+    </div>
+    <!-- Mini rainbow -->
+    <div style="position:relative;height:clamp(55px,9vw,80px);margin-top:8px;overflow:hidden">
+      <div style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(420px,80vw);height:clamp(55px,9vw,80px)">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:100%;border-radius:50% 50% 0 0 / 100% 100% 0 0;border-top:clamp(6px,1.2vw,10px) solid #FF0000;box-sizing:border-box"></div>
+        <div style="position:absolute;bottom:0;left:5%;right:5%;height:88%;border-radius:50% 50% 0 0 / 100% 100% 0 0;border-top:clamp(6px,1.2vw,10px) solid #FF7F00;box-sizing:border-box"></div>
+        <div style="position:absolute;bottom:0;left:10%;right:10%;height:76%;border-radius:50% 50% 0 0 / 100% 100% 0 0;border-top:clamp(6px,1.2vw,10px) solid #FFFF00;box-sizing:border-box"></div>
+        <div style="position:absolute;bottom:0;left:15%;right:15%;height:64%;border-radius:50% 50% 0 0 / 100% 100% 0 0;border-top:clamp(6px,1.2vw,10px) solid #00CC00;box-sizing:border-box"></div>
+        <div style="position:absolute;bottom:0;left:20%;right:20%;height:52%;border-radius:50% 50% 0 0 / 100% 100% 0 0;border-top:clamp(6px,1.2vw,10px) solid #0000FF;box-sizing:border-box"></div>
+        <div style="position:absolute;bottom:0;left:25%;right:25%;height:40%;border-radius:50% 50% 0 0 / 100% 100% 0 0;border-top:clamp(6px,1.2vw,10px) solid #8B00FF;box-sizing:border-box"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: LIGHT TRAVELS THROUGH AIR -->
+<div class="slide bg-2">
+  <span class="big-emoji" style="color:white">💨</span>
+  <div class="card">
+    <div class="slide-title" style="color:#1565C0">Light Travels Through Air 💨</div>
+    <div class="slide-text">
+      When sunlight travels from the Sun down to Earth, it has to pass through our <span class="hlb">atmosphere</span> — the layer of air that wraps around our planet like a cosy blanket! 🌍<br>
+      Air is full of <span class="hl">tiny tiny particles</span> — so small you can never see them — called molecules.<br>
+      When light hits these tiny particles, something magical happens — the light <span class="hlg">bounces and scatters</span> in all directions! 💫<br>
+      Think of it like a ball bouncing off lots of little bumpers! 🎱
+    </div>
+    <div class="compare-row">
+      <div class="compare-box"><span class="cb-e">☀️</span>Sunlight<br><small>All colours mixed</small></div>
+      <div style="font-size:1.4rem">→💨→</div>
+      <div class="compare-box"><span class="cb-e">✨</span>Scatters!<br><small>Bounces everywhere</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: WHY BLUE SPECIFICALLY -->
+<div class="slide bg-3">
+  <span class="big-emoji">💙</span>
+  <div class="card">
+    <div class="slide-title" style="color:#1565C0">But Why BLUE Specifically? 💙</div>
+    <div class="slide-text">
+      Here's the cool part! Not all colours bounce the same way.<br>
+      <span class="hlb">Blue light bounces around the MOST</span> — it scatters in every direction all across the sky!<br>
+      Red and orange light travel more in a straight line and don't bounce as much.<br>
+      So when you look up, <span class="hl">blue light is coming at your eyes from EVERYWHERE in the sky</span> — that's why the whole sky looks blue! 💙<br>
+      Blue is basically the most energetic, bouncy colour of all! 🎉
+    </div>
+    <div class="compare-row">
+      <div class="compare-box" style="border-color:#3B82F6"><span class="cb-e">💙</span>Blue light<br><small style="color:#3B82F6">Bounces LOTS!</small></div>
+      <div class="compare-box" style="border-color:#EF4444"><span class="cb-e">🔴</span>Red light<br><small style="color:#EF4444">Goes straight</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: WHY SUNSET IS RED/ORANGE -->
+<div class="slide bg-5">
+  <span class="big-emoji" style="font-size:clamp(2rem,6vw,3.5rem)">🌅</span>
+  <div class="card">
+    <div class="slide-title" style="color:#B45309">Why is Sunset Red and Orange? 🌅</div>
+    <div class="slide-text">
+      Have you noticed the sky turns red and orange at sunset? Here's why!<br>
+      When the Sun is low in the sky, sunlight has to travel through <span class="hl">much MORE air</span> to reach your eyes.<br>
+      All the blue light gets scattered away long before it reaches you.<br>
+      But <span class="hlr">red and orange light travel further</span> without bouncing — so THEY reach your eyes at sunset!<br>
+      Same sky, same Sun — but a completely different colour show! 🎨✨
+    </div>
+    <div class="compare-row">
+      <div class="compare-box"><span class="cb-e">🌞</span>Midday<br><small style="color:#3B82F6">Blue sky!</small></div>
+      <div class="compare-box"><span class="cb-e">🌅</span>Sunset<br><small style="color:#EF4444">Red & orange!</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: WHY CLOUDS ARE WHITE -->
+<div class="slide bg-4">
+  <div class="deco cloud-deco" style="top:8%;left:10%;font-size:3.5rem;--cd:8s">⛅</div>
+  <div class="deco cloud-deco" style="top:15%;right:5%;font-size:2.5rem;--cd:6s;--cdl:1s">☁️</div>
+  <span class="big-emoji">☁️</span>
+  <div class="card">
+    <div class="slide-title" style="color:#1565C0">Why Are Clouds White? ☁️</div>
+    <div class="slide-text">
+      Great question! Clouds are made of tiny water droplets.<br>
+      These droplets are <span class="hlb">much bigger than air molecules</span> — so they scatter ALL colours of light equally, not just blue!<br>
+      When all colours scatter together equally, they mix back into <span class="hl">white light</span> — so clouds look white! ☁️<br>
+      Dark storm clouds look grey because they're so <span class="hlg">thick and heavy</span> with water that most light can't get through! 🌧️
+    </div>
+    <div class="compare-row">
+      <div class="compare-box"><span class="cb-e">☁️</span>Fluffy cloud<br><small>All colours → White!</small></div>
+      <div class="compare-box"><span class="cb-e">⛈️</span>Storm cloud<br><small>Too thick → Grey!</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: OTHER PLANET SKIES -->
+<div class="slide bg-6">
+  <div class="star-bg" style="width:3px;height:3px;top:10%;left:20%;--d:2s;--dl:0s"></div>
+  <div class="star-bg" style="width:2px;height:2px;top:18%;left:75%;--d:2.5s;--dl:0.7s"></div>
+  <div class="star-bg" style="width:3px;height:3px;top:30%;left:50%;--d:1.8s;--dl:1.2s"></div>
+  <span class="big-emoji">🪐</span>
+  <div class="card" style="background:rgba(10,20,80,0.88);border:2px solid rgba(100,180,255,0.3)">
+    <div class="slide-title" style="color:#93C5FD">Other Planet Skies! 🪐</div>
+    <div class="slide-text" style="color:#DBEAFE">
+      Here's something amazing — other planets have <span style="color:#FCD34D;font-weight:800">different coloured skies!</span><br>
+      🔴 <span style="color:#FCA5A5;font-weight:800">Mars has a pinkish-red sky</span> — because its air is full of red dust!<br>
+      🟡 <span style="color:#FDE68A;font-weight:800">Venus has an orange-yellow sky</span> — thick clouds of yellow gas!<br>
+      💙 <span style="color:#93C5FD;font-weight:800">Neptune has a deep blue sky</span> — even bluer than Earth!<br>
+      Our blue sky is actually <span style="color:#FFD700;font-weight:800">special and beautiful</span> — it means we have just the right air for us to breathe and live! 🌍💙
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: YOU ARE AMAZING -->
+<div class="slide bg-7">
+  <div class="deco cloud-deco" style="top:6%;left:5%;font-size:3rem;--cd:7s">☁️</div>
+  <div class="deco cloud-deco" style="top:10%;right:8%;font-size:2.5rem;--cd:5s;--cdl:1.5s">⛅</div>
+  <span class="big-emoji" style="font-size:clamp(2.5rem,7vw,4rem)">🌈</span>
+  <div class="card" style="text-align:center">
+    <div class="slide-title" style="color:#1565C0;font-size:clamp(1.4rem,4.5vw,2rem)">You're a Sky Scientist! 🔬</div>
+    <div class="slide-text" style="text-align:left">
+      Now YOU know why the sky is blue! Next time someone asks, you can explain it! 💙<br>
+      <span class="hlb">Blue light bounces around the most</span> in our air — filling the whole sky with blue!<br>
+      And at sunset, <span class="hl">red and orange light</span> travel further to reach us instead.<br>
+      <span class="hlg">Every time you look up at the sky, you're seeing science in action!</span> 🌤️✨
+    </div>
+    <div style="display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:10px">
+      <span class="fact-pill">💙 Blue bounces most</span>
+      <span class="fact-pill">🌅 Red travels further</span>
+      <span class="fact-pill">☁️ Clouds scatter all colours</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<button id="speak-fixed" onclick="speakCurrent()">🔊 Read to me!</button>
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="changeSlide(-1)">← Back</button>
+  <div class="dot-row" id="dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+const TOTAL = 8;
+let current = 0;
+
+const TEXTS = [
+  "Why is the Sky Blue? Have you ever looked up and wondered — why is the sky that beautiful blue colour? It is one of the best questions EVER — and the answer is amazing science! Today we will learn about sunlight, colours, and our air!",
+  "Sunlight is full of colours! Here is a secret — sunlight looks white or yellow, but it is actually hiding ALL the colours of the rainbow inside it! Red, orange, yellow, green, blue, indigo, violet — they are all there, travelling together! You can see this when sunlight shines through a glass of water or after rain — a rainbow appears and shows all the hidden colours!",
+  "Light travels through air. When sunlight travels from the Sun down to Earth, it has to pass through our atmosphere — the layer of air that wraps around our planet like a cosy blanket! Air is full of tiny tiny particles — so small you can never see them — called molecules. When light hits these tiny particles, something magical happens — the light bounces and scatters in all directions! Think of it like a ball bouncing off lots of little bumpers!",
+  "But why blue specifically? Here is the cool part! Not all colours bounce the same way. Blue light bounces around the most — it scatters in every direction all across the sky! Red and orange light travel more in a straight line and do not bounce as much. So when you look up, blue light is coming at your eyes from everywhere in the sky — that is why the whole sky looks blue! Blue is basically the most energetic bouncy colour of all!",
+  "Why is sunset red and orange? Have you noticed the sky turns red and orange at sunset? Here is why! When the Sun is low in the sky, sunlight has to travel through much more air to reach your eyes. All the blue light gets scattered away long before it reaches you. But red and orange light travel further without bouncing — so they reach your eyes at sunset! Same sky, same Sun — but a completely different colour show!",
+  "Why are clouds white? Great question! Clouds are made of tiny water droplets. These droplets are much bigger than air molecules — so they scatter all colours of light equally, not just blue! When all colours scatter together equally, they mix back into white light — so clouds look white! Dark storm clouds look grey because they are so thick and heavy with water that most light cannot get through!",
+  "Other planet skies! Here is something amazing — other planets have different coloured skies! Mars has a pinkish red sky — because its air is full of red dust! Venus has an orange yellow sky — thick clouds of yellow gas! Neptune has a deep blue sky — even bluer than Earth! Our blue sky is actually special and beautiful — it means we have just the right air for us to breathe and live!",
+  "You are a sky scientist! Now you know why the sky is blue! Next time someone asks, you can explain it! Blue light bounces around the most in our air — filling the whole sky with blue! And at sunset, red and orange light travel further to reach us instead. Every time you look up at the sky, you are seeing science in action!"
+];
+
+function buildDots() {
+  const c = document.getElementById('dots');
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.onclick = () => goTo(i);
+    c.appendChild(d);
+  }
+}
+function updateProgress() {
+  document.getElementById('progress').style.width = ((current+1)/TOTAL*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===current));
+  document.getElementById('btn-prev').style.opacity = current===0?'0.3':'1';
+  document.getElementById('btn-next').style.opacity = current===TOTAL-1?'0.3':'1';
+}
+function goTo(n) {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  document.querySelector('.slide.active') && document.querySelector('.slide.active').classList.remove('active');
+  current = Math.max(0,Math.min(TOTAL-1,n));
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  updateProgress();
+}
+function changeSlide(dir) { goTo(current+dir); }
+function speakCurrent() { speak(current); }
+
+let audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return; audioUnlocked = true;
+  if (window.speechSynthesis) { const u = new SpeechSynthesisUtterance(' '); u.volume=0; window.speechSynthesis.speak(u); }
+}
+function hideBanner() {
+  const b = document.getElementById('audio-banner');
+  if (b) { b.style.opacity='0'; setTimeout(function(){b.remove();},600); }
+}
+document.addEventListener('click', unlockAudio, {once:true});
+document.addEventListener('touchstart', unlockAudio, {once:true});
+document.addEventListener('click', hideBanner, {once:true});
+document.addEventListener('touchstart', hideBanner, {once:true});
+
+function speak(idx) {
+  if (!window.speechSynthesis) { alert("Try Chrome for audio!"); return; }
+  window.speechSynthesis.cancel();
+  setTimeout(function() {
+    const sentences = TEXTS[idx].match(/[^.!?]+[.!?]+/g) || [TEXTS[idx]];
+    let voices = speechSynthesis.getVoices();
+    function findVoice(v) {
+      return v.find(x=>x.name==='Samantha')||v.find(x=>x.name==='Karen')||v.find(x=>x.name==='Moira')||
+             v.find(x=>x.name==='Google UK English Female')||v.find(x=>x.lang==='en-US'&&x.localService)||v.find(x=>x.lang.startsWith('en'));
+    }
+    let preferred = findVoice(voices);
+    if (!preferred) { speechSynthesis.onvoiceschanged=function(){preferred=findVoice(speechSynthesis.getVoices());runSpeech(sentences,preferred);}; }
+    else { runSpeech(sentences, preferred); }
+  }, 120);
+}
+function runSpeech(sentences, preferred) {
+  let i = 0;
+  function next() {
+    if (i>=sentences.length) return;
+    const text=sentences[i].trim(); if(!text){i++;next();return;}
+    const u=new SpeechSynthesisUtterance(text);
+    if(preferred) u.voice=preferred;
+    u.rate=0.82; u.pitch=1.08; u.volume=1;
+    if(text.includes('!')) {u.pitch=1.18;u.rate=0.88;}
+    if(text.includes('?')) {u.pitch=1.14;u.rate=0.80;}
+    i++; u.onend=next; u.onerror=function(){i++;next();};
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+document.addEventListener('keydown', function(e) {
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') changeSlide(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') changeSlide(-1);
+});
+let touchX=null;
+document.addEventListener('touchstart',function(e){touchX=e.touches[0].clientX;});
+document.addEventListener('touchend',function(e){
+  if(touchX===null)return; const dx=e.changedTouches[0].clientX-touchX;
+  if(Math.abs(dx)>50) changeSlide(dx<0?1:-1); touchX=null;
+});
+if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices();};}
+buildDots(); updateProgress();
+</script>
+</body>
+</html>
