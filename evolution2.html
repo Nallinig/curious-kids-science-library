@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Animals Change Over Time! 🦎</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f2027;
+    overflow: hidden;
+  }
+  .app {
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    max-height: 780px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 32px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 24px 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: translateX(60px);
+  }
+  .slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+  .slide.exit { opacity: 0; transform: translateX(-60px); }
+
+  .slide-0 { background: linear-gradient(160deg, #064e3b, #065f46, #047857); }
+  .slide-1 { background: linear-gradient(160deg, #fef3c7, #fde68a, #fcd34d); }
+  .slide-2 { background: linear-gradient(160deg, #e0f2fe, #bae6fd, #7dd3fc); }
+  .slide-3 { background: linear-gradient(160deg, #fce7f3, #fbcfe8, #f9a8d4); }
+  .slide-4 { background: linear-gradient(160deg, #dcfce7, #bbf7d0, #86efac); }
+  .slide-5 { background: linear-gradient(160deg, #ffedd5, #fed7aa, #fdba74); }
+  .slide-6 { background: linear-gradient(160deg, #ede9fe, #ddd6fe, #c4b5fd); }
+  .slide-7 { background: linear-gradient(160deg, #fef9c3, #fef08a, #fde047); }
+  .slide-8 { background: linear-gradient(160deg, #0c4a6e, #075985, #0369a1); }
+
+  .slide-emoji { font-size: 52px; margin-top: 8px; animation: floatEmoji 3s ease-in-out infinite; }
+  @keyframes floatEmoji { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  .card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 24px;
+    padding: 20px 18px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    flex: 1;
+    margin: 12px 0;
+    overflow-y: auto;
+  }
+  .card::-webkit-scrollbar { width: 4px; }
+  .card::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+  .card h2 { font-family: 'Fredoka One', cursive; font-size: 21px; margin-bottom: 10px; line-height: 1.2; }
+  .card p { font-size: 14px; line-height: 1.65; color: #374151; margin-bottom: 9px; }
+
+  .slide-0 .card, .slide-8 .card {
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.25);
+  }
+  .slide-0 .card h2, .slide-0 .card p { color: white; }
+  .slide-8 .card h2 { color: #fde047; }
+  .slide-8 .card p { color: rgba(255,255,255,0.92); }
+
+  .title-big { font-family:'Fredoka One',cursive; font-size:32px; color:white; text-align:center; text-shadow:0 4px 20px rgba(0,0,0,0.3); line-height:1.1; }
+
+  .hl-green { background:#d1fae5; color:#065f46; padding:1px 6px; border-radius:6px; font-weight:700; }
+  .hl-blue  { background:#dbeafe; color:#1d4ed8; padding:1px 6px; border-radius:6px; font-weight:700; }
+  .hl-pink  { background:#fce7f3; color:#be185d; padding:1px 6px; border-radius:6px; font-weight:700; }
+  .hl-orange{ background:#ffedd5; color:#c2410c; padding:1px 6px; border-radius:6px; font-weight:700; }
+  .hl-purple{ background:#ede9fe; color:#7c3aed; padding:1px 6px; border-radius:6px; font-weight:700; }
+  .hl-yellow{ background:#fef9c3; color:#854d0e; padding:1px 6px; border-radius:6px; font-weight:700; }
+
+  .example-box {
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin: 8px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .box-green  { background:#f0fdf4; border-left:4px solid #22c55e; }
+  .box-blue   { background:#eff6ff; border-left:4px solid #3b82f6; }
+  .box-orange { background:#fff7ed; border-left:4px solid #f97316; }
+  .box-purple { background:#f5f3ff; border-left:4px solid #8b5cf6; }
+  .box-yellow { background:#fefce8; border-left:4px solid #eab308; }
+
+  .animal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 0;
+    font-size: 13px;
+    text-align: center;
+    gap: 6px;
+  }
+  .animal-box {
+    flex: 1;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 10px 6px;
+    border: 2px solid #e2e8f0;
+  }
+  .animal-box .emoji { font-size: 30px; display: block; margin-bottom: 4px; }
+  .animal-box p { font-size: 11.5px; color: #475569; margin: 0; }
+  .arrow { font-size: 22px; color: #94a3b8; }
+
+  .verdict-box {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border: 2px solid #6ee7b7;
+    font-size: 13.5px;
+    color: #064e3b;
+    font-weight: 700;
+  }
+
+  .myth-box {
+    border-radius: 14px;
+    padding: 11px 14px;
+    margin: 7px 0;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .myth { background:#fee2e2; border-left:4px solid #ef4444; }
+  .myth strong { color:#b91c1c; }
+  .fact { background:#d1fae5; border-left:4px solid #22c55e; }
+  .fact strong { color:#065f46; }
+
+  .nav-btn {
+    padding: 10px 22px; border-radius: 50px; border: none;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn:active { transform: scale(0.95); }
+  .btn-back { background: rgba(255,255,255,0.2); color: white; }
+  .btn-back:disabled { opacity: 0.2; cursor: not-allowed; }
+  .btn-next { background: #059669; color: white; box-shadow: 0 4px 16px rgba(5,150,105,0.4); }
+  .slide-0 .btn-next { background:#fbbf24; color:#064e3b; }
+  .slide-8 .btn-next { background:#fde047; color:#0c4a6e; }
+
+  .bottom-nav { width:100%; display:flex; align-items:center; justify-content:space-between; padding:0 4px; margin-top:4px; }
+  .dots { display:flex; gap:6px; align-items:center; }
+  .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3); transition:all 0.3s; cursor:pointer; }
+  .dot.active { background:white; width:20px; border-radius:4px; }
+
+  .read-btn {
+    background: rgba(255,255,255,0.2); border: none; border-radius: 50px;
+    padding: 8px 18px; color: white; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 13px; cursor: pointer; margin-bottom: 6px;
+    transition: background 0.2s;
+  }
+  .read-btn:hover { background: rgba(255,255,255,0.3); }
+
+  .badge-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+  .badge { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:6px 14px; font-size:13px; color:white; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Slide 0: Title -->
+  <div class="slide slide-0 active">
+    <div class="slide-emoji">🦎</div>
+    <div class="title-big">How Animals<br>Change Over Time!</div>
+    <div class="card">
+      <p style="text-align:center; font-size:15px;">A big idea called <strong style="color:#6ee7b7;">Evolution</strong> — explained just for you!</p>
+      <p style="text-align:center; margin-top:6px;">And the secret of <strong style="color:#fbbf24;">Survival of the Fittest</strong> 🏆</p>
+    </div>
+    <button class="read-btn">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" disabled onclick="prevSlide()">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 1: What is Evolution? -->
+  <div class="slide slide-1">
+    <div class="slide-emoji">🌱</div>
+    <div class="card">
+      <h2 style="color:#92400e;">What IS Evolution? 🌱</h2>
+      <p>Imagine you have a <span class="hl-orange">family photo album</span> going back millions of years. In the oldest photos — animals look very different from today!</p>
+      <div class="example-box box-orange">
+        <strong>Evolution</strong> is the way living things <em>slowly change</em> over a very, very long time — so long it makes your brain dizzy! 😵
+      </div>
+      <p>Not one animal changing in its lifetime — but whole <span class="hl-yellow">families of animals</span> slowly changing across thousands of generations.</p>
+      <p>Think of it like this: your grandparent looked a little different from you — and their grandparent a little different from them — and so on, back and back and back... for millions of years! 🕰️</p>
+    </div>
+    <button class="read-btn" style="color:#92400e; background:rgba(146,64,14,0.12);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(146,64,14,0.15);color:#92400e;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#d97706;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 2: The Giraffe Story -->
+  <div class="slide slide-2">
+    <div class="slide-emoji">🦒</div>
+    <div class="card">
+      <h2 style="color:#0369a1;">Meet the Giraffes! 🦒</h2>
+      <p>Long ago, giraffes had <span class="hl-blue">short necks</span>. But the tastiest leaves were at the TOP of tall trees.</p>
+      <div class="animal-row">
+        <div class="animal-box">
+          <span class="emoji">🦒</span>
+          <p><strong>Short neck</strong><br>Can't reach top leaves 😟</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="animal-box">
+          <span class="emoji">🦒</span>
+          <p style="font-size:13px;"><strong>Longer neck</strong><br>Reaches more food! 😊</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="animal-box">
+          <span class="emoji">🦒</span>
+          <p><strong>Long neck!</strong><br>Lots of food! 🎉</p>
+        </div>
+      </div>
+      <p>Giraffes born with <span class="hl-blue">slightly longer necks</span> could eat more food. They were stronger, healthier, and had more babies — who also had long necks!</p>
+      <p>Over millions of years — long necks won! That's evolution in action. 🌟</p>
+    </div>
+    <button class="read-btn" style="color:#0369a1; background:rgba(3,105,161,0.1);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(3,105,161,0.15);color:#0369a1;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#0284c7;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 3: Survival of the Fittest -->
+  <div class="slide slide-3">
+    <div class="slide-emoji">🏆</div>
+    <div class="card">
+      <h2 style="color:#be185d;">Survival of the Fittest! 🏆</h2>
+      <p>This sounds like the <span class="hl-pink">strongest bully wins</span> — but that's NOT what it means! 🙅</p>
+      <div class="myth-box myth"><strong>❌ MYTH:</strong> "Fittest" means the biggest, strongest, most powerful animal always wins.</div>
+      <div class="myth-box fact"><strong>✅ FACT:</strong> "Fittest" means the best <em>fit</em> for where you live — like a key fitting a lock!</div>
+      <p>A <span class="hl-pink">tiny mouse</span> can be "fitter" than a lion — if the mouse lives in a cold snowy place where small animals hide better and stay warm easier!</p>
+      <p>"Fit" means: <strong>good at surviving in YOUR environment.</strong> 🗝️</p>
+    </div>
+    <button class="read-btn" style="color:#be185d; background:rgba(190,24,93,0.1);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(190,24,93,0.15);color:#be185d;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#db2777;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 4: How They Work Together -->
+  <div class="slide slide-4">
+    <div class="slide-emoji">🔗</div>
+    <div class="card">
+      <h2 style="color:#065f46;">How They Work Together! 🔗</h2>
+      <p>Evolution and Survival of the Fittest are like <span class="hl-green">best friends</span> — they work as a team!</p>
+      <div class="example-box box-green">
+        <strong>Step 1:</strong> Baby animals are born slightly different from each other — some bigger, some smaller, some with different colours. 🐣
+      </div>
+      <div class="example-box box-green">
+        <strong>Step 2:</strong> The ones whose differences help them survive — find food, hide from danger, stay warm — live longer. 🌿
+      </div>
+      <div class="example-box box-green">
+        <strong>Step 3:</strong> They have babies who inherit those helpful differences. Over millions of years — the animal slowly changes! 🔄
+      </div>
+      <div class="verdict-box">That whole process together IS evolution — and survival of the fittest is HOW it works! They're two parts of the same idea! 🧩</div>
+    </div>
+    <button class="read-btn" style="color:#065f46; background:rgba(6,95,70,0.1);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(6,95,70,0.15);color:#065f46;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#059669;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 5: Fun Examples -->
+  <div class="slide slide-5">
+    <div class="slide-emoji">🐸</div>
+    <div class="card">
+      <h2 style="color:#c2410c;">Cool Examples! 🌍</h2>
+      <div class="example-box box-orange">
+        <strong>🐸 Frogs:</strong> Some frogs are bright red — to say "I'm poisonous, don't eat me!" Birds learned to avoid bright frogs. So bright frogs survived more — and now many frogs are very colourful!
+      </div>
+      <div class="example-box box-blue">
+        <strong>🦋 Butterflies:</strong> Some butterflies look exactly like leaves! Birds can't see them. Leaf-looking butterflies survived — so now many butterflies are masters of disguise!
+      </div>
+      <div class="example-box box-green">
+        <strong>🐻 Polar Bears:</strong> Long ago some bears had slightly whiter fur. In snow — white bears hid better and caught more food. Over time — polar bears became completely white!
+      </div>
+      <p style="font-size:13px; color:#64748b;">All of these took <em>millions</em> of years — no rushing! ⏳</p>
+    </div>
+    <button class="read-btn" style="color:#c2410c; background:rgba(194,65,12,0.1);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(194,65,12,0.15);color:#c2410c;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#ea580c;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 6: The Evidence -->
+  <div class="slide slide-6">
+    <div class="slide-emoji">🔬</div>
+    <div class="card">
+      <h2 style="color:#6d28d9;">How Do We KNOW? 🔬</h2>
+      <p>This isn't a guess — scientists have found <span class="hl-purple">mountains of evidence!</span></p>
+      <div class="example-box box-purple">
+        <strong>🦴 Fossils:</strong> Bones of ancient animals buried in rock show us what they looked like millions of years ago — and how they slowly changed.
+      </div>
+      <div class="example-box box-purple">
+        <strong>🧬 DNA:</strong> Every living thing has a code inside its cells. Humans share 98% of their DNA with chimpanzees — and 60% with bananas! 🍌
+      </div>
+      <div class="example-box box-purple">
+        <strong>🌍 Islands:</strong> Animals on islands cut off from the rest of the world evolved differently — same starting animal, different result. Darwin saw this with finches!
+      </div>
+      <p style="font-size:13px; color:#6d28d9; font-weight:700;">Evidence comes from fossils, DNA, living animals and direct observation. Scientists agree! 🤝</p>
+    </div>
+    <button class="read-btn" style="color:#6d28d9; background:rgba(109,40,217,0.1);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(109,40,217,0.15);color:#6d28d9;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#7c3aed;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 7: Common Confusions -->
+  <div class="slide slide-7">
+    <div class="slide-emoji">🤔</div>
+    <div class="card">
+      <h2 style="color:#854d0e;">Things People Get Mixed Up! 🤔</h2>
+      <div class="myth-box myth"><strong>❌ "Animals DECIDE to evolve"</strong><br>Nope — no animal chooses to change. It just happens slowly across many generations.</div>
+      <div class="myth-box myth"><strong>❌ "Humans came from monkeys"</strong><br>Not quite! Humans and monkeys share an ancient common ancestor — like cousins, not parent and child.</div>
+      <div class="myth-box myth"><strong>❌ "Survival of the fittest = strongest wins"</strong><br>Fittest means best suited to the environment — not biggest muscles!</div>
+      <div class="myth-box fact"><strong>✅ The truth:</strong> Evolution is a slow, patient, beautiful process — like nature doing a very long science experiment! 🧪</div>
+    </div>
+    <button class="read-btn" style="color:#854d0e; background:rgba(133,77,14,0.1);">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()" style="background:rgba(133,77,14,0.15);color:#854d0e;">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="nextSlide()" style="background:#ca8a04;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Slide 8: Summary -->
+  <div class="slide slide-8">
+    <div class="slide-emoji">🌟</div>
+    <div class="card">
+      <h2 style="text-align:center;">You're an Evolution Expert! 🌟</h2>
+      <p>Remember the big ideas:</p>
+      <p>🦎 <strong style="color:#7dd3fc;">Evolution</strong> = animals slowly changing over millions of years</p>
+      <p>🏆 <strong style="color:#fde047;">Survival of the Fittest</strong> = best suited to your home, not strongest</p>
+      <p>🔗 <strong style="color:#86efac;">Together</strong> = small differences → survive better → pass it on → slowly change!</p>
+      <p>🔬 <strong style="color:#f9a8d4;">Evidence</strong> = fossils, DNA, islands, living animals — it's science!</p>
+      <div class="badge-row">
+        <div class="badge">🦒 Giraffes</div>
+        <div class="badge">🐸 Frogs</div>
+        <div class="badge">🧬 DNA</div>
+        <div class="badge">🦴 Fossils</div>
+      </div>
+    </div>
+    <button class="read-btn">🔊 Read to me!</button>
+    <div class="bottom-nav">
+      <button class="nav-btn btn-back" onclick="prevSlide()">← Back</button>
+      <div class="dots"></div>
+      <button class="nav-btn btn-next" onclick="restartStory()" style="background:#fde047;color:#0c4a6e;">Start Again ↺</button>
+    </div>
+  </div>
+
+</div>
+<script>
+  let currentSlide = 0;
+  const totalSlides = 9;
+
+  function updateDots() {
+    document.querySelectorAll('.dots').forEach(dc => {
+      dc.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i === currentSlide ? ' active' : '');
+        d.onclick = () => goToSlide(i);
+        dc.appendChild(d);
+      }
+    });
+  }
+
+  function goToSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    slides[currentSlide].classList.remove('active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+    updateDots();
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      const slides = document.querySelectorAll('.slide');
+      slides[currentSlide].classList.add('exit');
+      slides[currentSlide].classList.remove('active');
+      currentSlide++;
+      slides[currentSlide].classList.add('active');
+      setTimeout(() => document.querySelectorAll('.slide').forEach(s => s.classList.remove('exit')), 400);
+      updateDots();
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      const slides = document.querySelectorAll('.slide');
+      slides[currentSlide].classList.remove('active');
+      currentSlide--;
+      slides[currentSlide].classList.add('active');
+      updateDots();
+    }
+  }
+
+  function restartStory() {
+    const slides = document.querySelectorAll('.slide');
+    slides[currentSlide].classList.remove('active');
+    currentSlide = 0;
+    slides[0].classList.add('active');
+    updateDots();
+  }
+
+  function cleanForSpeech(text) {
+    return text
+      .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
+      .replace(/[\u{2600}-\u{27BF}]/gu, '')
+      .replace(/[\u{FE00}-\u{FEFF}]/gu, '')
+      .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
+      .replace(/[\u{2300}-\u{23FF}]/gu, '')
+      .replace(/[\u{2B00}-\u{2BFF}]/gu, '')
+      .replace(/[^\x00-\x7F\u00C0-\u024F]/g, '')
+      .replace(/([^.!?])\n/g, '$1. ')
+      .replace(/([.!?])\n/g, '$1 ')
+      .replace(/\n/g, '. ')
+      .replace(/\.{2,}/g, '.')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  document.querySelectorAll('.read-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.slide').querySelector('.card');
+      const text = cleanForSpeech(card.innerText);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.9; u.pitch = 1.1;
+        window.speechSynthesis.speak(u);
+      }
+    });
+  });
+
+  updateDots();
+</script>
+</body>
+</html>
